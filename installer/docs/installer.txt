@@ -1,0 +1,6 @@
+
+クローン先フォルダ
+C:\Users\shun1\Downloads\新しいフォルダー\新しいフォルダー
+
+動画フォルダ
+C:\Users\shun1\Downloads\新しいフォルダー\video_app\backend\assets\sample_videos

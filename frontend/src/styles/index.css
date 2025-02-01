@@ -1,0 +1,21 @@
+
+@font-face {
+  font-family: 'OpenSans-Bold'; /* 任意のフォント名 */
+  src: url('/assets/fonts/OpenSans-Bold.woff2') format('woff2'); /* フォントファイルのパス */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenSans-Medium'; /* 任意のフォント名 */
+  src: url('/assets/fonts/OpenSans-Medium.woff2') format('woff2'); /* フォントファイルのパス */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto-Bold'; /* 任意のフォント名 */
+  src: url('/assets/fonts/Roboto-Bold.woff2') format('woff2'); /* フォントファイルのパス */
+  font-weight: normal;
+  font-style: normal;
+}

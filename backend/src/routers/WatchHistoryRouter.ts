@@ -1,0 +1,50 @@
+/**
+ * 再生履歴取得、削除するルーター
+ * ToDo: 再生履歴を取得するエンドポイントを作成
+ * Memo: 再生履歴を取得 → マージする関数を作る必要があるので面倒
+ */
+
+import { Router, Request, Response } from 'express';
+import { deleteAllWatchHistory, deleteWatchHistoryById } from "../repositories/WatchHistoryRepository";
+
+const router = Router();
+
+
+/**
+ * 全ての再生履歴を削除するエンドポイント
+ */
+router.delete('/', async (req: Request, res: Response) => {
+  try {
+    const videos = await deleteAllWatchHistory(); // サービスファイル内の関数を呼び出す
+
+    res.json({ message: `ビデオが${videos}個削除されました` });
+  } catch (error) {
+    console.error('Error fetching videos in router:', error);
+    res.status(500).json({ message: 'Failed to fetch videos' }); // エラーハンドリング
+  }
+});
+
+
+/**
+ * 指定した再生履歴を削除するエンドポイント
+ */
+router.delete('/:id', async (req: Request, res: Response) => {
+  const historyId = parseInt(req.params.id, 10);  // パラメータからIDを取得して数値に変換
+
+  /* Memo: なぜかこの部分でエラーになるので一時的にコメントアウト
+  // IDが無効な場合はエラーレスポンスを返す
+  if (isNaN(fileId)) {
+    return res.status(400).send('Invalid video ID');
+  }
+  */
+    try {
+    const videos = await deleteWatchHistoryById(historyId); // サービスファイル内の関数を呼び出す
+    res.json({ message: `ビデオが${videos}個削除されました` });
+ 
+  } catch (error) {
+    console.error('Error deleting video history in router:', error);
+    res.status(500).json({ message: 'Failed to delete video history'}); // エラーハンドリング
+  }
+});
+
+export default router;

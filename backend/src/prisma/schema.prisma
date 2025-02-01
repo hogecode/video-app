@@ -1,0 +1,62 @@
+// Memo: prisma format (構文エラー時)
+// Memo: npx prisma generate --schema=src/prisma/schema.prisma (スキーマに基づいてprisma clientを作成)
+// Memo: npx prisma migrate dev --schema=src/prisma/schema.prisma (マイグレーション)
+// Memo: npx prisma migrate deploy (本番環境)
+// Memo: 実装順: Video → XMLComment → WatchHistory 
+// Memo: タグは多対多でスキーマ定義も実装も面倒だし必要性も感じない
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" // SQLiteファイルを指定
+}
+
+
+// 動画テーブル
+// Memo: フォルダ関連は正規化してない
+// Memo: フォルダはconfig.iniに記載しているため
+// Memo: VideoとXMLCommentFileにはリレーションを持たせない
+model Video {
+  id               Int       @id @default(autoincrement())
+  fileName         String    // 動画ファイル名
+  folderPath       String    // フォルダパス
+  filePath         String    @unique// フルファイルパス
+  views            Int       @default(0) // 視聴回数
+  liked            Boolean   @default(false) // いいね済みか
+  createdAt        DateTime @default(now()) // 作成日時
+  screenshotFilePath    String?    //スクショのファイル名
+
+  WatchHistory     WatchHistory[]  @relation("VideoWatchHistory") // 視聴履歴とのリレーション
+}
+
+
+// 視聴履歴テーブル
+model WatchHistory {
+  id        Int      @id @default(autoincrement())
+  watchedAt DateTime @default(now()) // 視聴日時
+
+  // 視聴した動画（多対1）
+  videoId   Int
+  video     Video @relation(fields: [videoId], references: [id], name: "VideoWatchHistory", onDelete: Cascade)
+}
+
+
+// XMLCommentテーブル（ファイル名、フォルダパス、ファイルパス）
+model XMLCommentFile {
+  id             Int      @id @default(autoincrement())
+  commentCount   Int      // XMLコメントファイルのコメント数
+  commentedDate  DateTime // コメントされた時間
+  fileName       String   // XMLファイル名
+  folderPath     String   // フォルダパス
+  filePath       String   @unique // フルファイルパス
+  createdAt      DateTime @default(now()) // 作成日時
+}

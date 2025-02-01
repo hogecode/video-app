@@ -1,0 +1,22 @@
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\index.html'","timestamp":"2024-11-27T11:41:32.429Z"}
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\index.html'","timestamp":"2024-11-27T11:43:01.704Z"}
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\index.html'","timestamp":"2024-11-27T11:43:01.706Z"}
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\index.html'","timestamp":"2024-11-27T11:43:01.708Z"}
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\frontend\\build\\index.html'","timestamp":"2024-11-27T11:46:33.164Z"}
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\frontend\\build\\index.html'","timestamp":"2024-11-27T11:46:33.167Z"}
+{"level":"error","message":"Error: ENOENT: no such file or directory, stat 'C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\frontend\\build\\index.html'","timestamp":"2024-11-27T11:46:33.169Z"}
+{"level":"error","message":"Error fetching videos: {\"name\":\"PrismaClientKnownRequestError\",\"code\":\"P2023\",\"clientVersion\":\"5.22.0\",\"meta\":{\"modelName\":\"Video\",\"message\":\"Conversion failed: input contains invalid characters\"}}","timestamp":"2024-11-27T12:08:19.834Z"}
+{"level":"error","message":"Error fetching videos: {\"name\":\"PrismaClientKnownRequestError\",\"code\":\"P2023\",\"clientVersion\":\"5.22.0\",\"meta\":{\"modelName\":\"Video\",\"message\":\"Conversion failed: input contains invalid characters\"}}","timestamp":"2024-11-27T12:08:19.835Z"}
+{"level":"error","message":"Error fetching videos: {\"name\":\"PrismaClientKnownRequestError\",\"code\":\"P2023\",\"clientVersion\":\"5.22.0\",\"meta\":{\"modelName\":\"Video\",\"message\":\"Conversion failed: input contains invalid characters\"}}","timestamp":"2024-11-27T12:08:19.837Z"}
+{"level":"error","message":"Error fetching videos: {\"name\":\"PrismaClientKnownRequestError\",\"code\":\"P2023\",\"clientVersion\":\"5.22.0\",\"meta\":{\"modelName\":\"Video\",\"message\":\"Conversion failed: input contains invalid characters\"}}","timestamp":"2024-11-27T12:08:19.854Z"}
+{"level":"error","message":"Error fetching videos: {\"name\":\"PrismaClientKnownRequestError\",\"code\":\"P2023\",\"clientVersion\":\"5.22.0\",\"meta\":{\"modelName\":\"Video\",\"message\":\"Conversion failed: input contains invalid characters\"}}","timestamp":"2024-11-27T12:08:19.859Z"}
+{"level":"error","message":"Error enriching videos with comments: {}","timestamp":"2024-11-27T12:08:19.884Z"}
+{"level":"error","message":"Error enriching videos with comments: {}","timestamp":"2024-11-27T12:08:19.885Z"}
+{"level":"error","message":"Error enriching videos with comments: {}","timestamp":"2024-11-27T12:08:19.886Z"}
+{"level":"error","message":"Error enriching videos with comments: {}","timestamp":"2024-11-27T12:08:19.887Z"}
+{"level":"error","message":"Error enriching videos with comments: {}","timestamp":"2024-11-27T12:08:19.888Z"}
+{"level":"error","message":"Error fetching videos in router: {}","timestamp":"2024-11-27T12:08:19.899Z"}
+{"level":"error","message":"Error fetching videos in router: {}","timestamp":"2024-11-27T12:08:19.900Z"}
+{"level":"error","message":"Error fetching videos in router: {}","timestamp":"2024-11-27T12:08:19.901Z"}
+{"level":"error","message":"Error fetching videos in router: {}","timestamp":"2024-11-27T12:08:19.901Z"}
+{"level":"error","message":"Error fetching videos in router: {}","timestamp":"2024-11-27T12:08:19.902Z"}

@@ -1,0 +1,37 @@
+{
+  "name": "installer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "test-exe": "npx ts-node src/index.ts --dir \"C:\\Users\\shun1\\Downloads\\新しいフォルダー\\新しいフォルダー\" --videoFolder \"C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\sample_videos\"",
+    "build-exe": "npx pkg dist/index.js --targets node18-win-x64 --output video_app.exe"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/ini": "^4.1.1",
+    "@types/node": "^22.10.1",
+    "pkg": "^5.8.1",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "args": "^5.0.3",
+    "child_process": "^1.0.2",
+    "fs": "^0.0.1-security",
+    "ini": "^5.0.0",
+    "inquirer": "^12.1.0",
+    "minimist": "^1.2.8",
+    "path": "^0.12.7",
+    "process": "^0.11.10",
+    "simple-git": "^3.27.0",
+    "util": "^0.12.5"
+  },
+  "pkg": {
+    "assets": [
+      "../backend/config.ini"
+    ]
+  }
+}

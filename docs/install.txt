@@ -1,0 +1,6 @@
+
+// distしていてもnpm installは必要
+// dist済みでもnode dist/app.jsを直接は実行できない
+// npx tscする前にprismaマイグレーションが必要
+// 要するにnpm installとmigrate-devはdist済みでも必要
+// sqliteはインストール時には不要

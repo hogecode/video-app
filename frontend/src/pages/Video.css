@@ -1,0 +1,66 @@
+
+/* プレイヤーのツールバー全体のスタイル */
+.plyr__controls {
+  background-color: #000000; /* 背景を黒に */
+  color: #ffffff; /* デフォルトのアイコンとテキスト色を白に */
+  padding: 8px; /* コントロールのパディング */
+  border-radius: 6px; /* ツールバーの角を丸く */
+  transition: background-color 0.3s ease; /* 背景色が変わる際のスムーズなアニメーション */
+}
+
+/* 各コントロールボタンのスタイル */
+.plyr__control {
+  font-size: 18px; /* アイコンサイズ */
+  color: #ffffff; /* デフォルトでアイコンの色は白 */
+  padding: 10px; /* アイコンのパディング */
+  border-radius: 4px; /* アイコンを丸く */
+  transition: background-color 0.3s ease, color 0.3s ease; /* ホバー時のアニメーション */
+}
+
+/* コントロールボタンのホバー時のスタイル */
+.plyr__control:hover,
+.plyr__control:focus {
+  background-color: rgba(0, 179, 255, 0.3); /* ホバー時に水色の背景 */
+  color: #ffffff; /* アイコンの色を白に */
+}
+
+/* プレイヤー全体の外観 */
+.plyr {
+  font-family: 'Arial', sans-serif; /* フォント設定 */
+  border-radius: 10px; /* プレイヤー全体の角を丸く */
+  overflow: hidden;
+}
+
+/* ツールバー全体のスタイル（背景色やホバー効果を削除） */
+.plyr__controls {
+  padding: 8px; /* コントロールのパディング */
+  border-radius: 6px; /* ツールバーの角を丸く */
+  color: #ffffff; /* アイコンとテキストの色を白に */
+}
+
+/* 各コントロールボタンのスタイル */
+.plyr__control {
+  font-size: 18px; /* アイコンのサイズ */
+  color: #ffffff; /* アイコンの色を白に */
+  padding: 10px; /* アイコンのパディング */
+  border-radius: 4px; /* アイコンの角を丸く */
+}
+
+/* プログレスバーの進行状況 */
+.plyr__progress__filled {
+  background-color: #00b3ff; /* 進行状況の色 */
+}
+
+/* シークバーのサムネイル */
+.plyr__range__thumb {
+  height: 16px; /* シークバーのサムネイルの高さ */
+  background-color: #ffffff; /* サムネイルの背景色 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* サムネイルの影 */
+}
+
+
+
+
+
+
+  

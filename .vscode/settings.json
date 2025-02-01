@@ -1,0 +1,36 @@
+
+{
+    "javascript.suggest.autoImports": true,
+    "typescript.suggest.autoImports": true,
+    
+        // タイプチェックの強化
+        "typescript.validate.enable": true,
+
+        // JS/TSのフォーマッター設定
+        "editor.formatOnSave": true,
+        "prettier.singleQuote": true, // シングルクォートを使用
+        "prettier.trailingComma": "es5", // 末尾にカンマを追加
+    
+        // IntelliSenseの設定
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": true,
+            "strings": true
+        },
+    
+        // TypeScriptの設定
+        "typescript.tsserver.maxTsServerMemory": 4096, // メモリ制限を設定
+    
+        // Lintingの設定（ESLintを使用する場合）
+        "eslint.enable": true,
+    
+        // エディタのタブ幅
+        "editor.tabSize": 2,
+    
+        // 自動保存の設定
+        "files.autoSave": "onWindowChange",
+
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit"
+        } // ウィンドウ変更時に自動保存
+}

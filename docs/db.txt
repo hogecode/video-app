@@ -1,0 +1,11 @@
+
+prismaフォルダで開くことに注意
+
+・DB起動 
+sqlite3 dev.db
+
+・テーブル一覧
+.tables
+
+・SQLファイルを読み込む
+.read db.sql

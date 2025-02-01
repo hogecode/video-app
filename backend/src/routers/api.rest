@@ -1,0 +1,21 @@
+
+### GET /api/files(65ms)
+GET http://localhost:3000/api/files
+
+### GET /api/files/:id(600ms)
+GET http://localhost:3000/api/files/1
+
+### GET /api/files/:id
+GET http://localhost:3000/api/files/2
+
+### GET /api/streams/:id(2500ms)
+GET http://localhost:3000/api/streams/1
+
+### POST /api/files/refresh(25ms)
+POST http://localhost:3000/api/files/refresh
+
+### GET screenshot(10ms)
+GET http://localhost:3000/assets/screenshots/sample03.png
+
+### GET m3u8(3000→240ms)
+GET http://localhost:3000/assets/stream/sample01/sample01.m3u8
