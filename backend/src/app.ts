@@ -137,6 +137,11 @@ app.get('/service-worker.js', (req, res) => {
   res.sendFile(serviceWorkerPath);
 });
 
+app.get('/manifest.json', (req, res) => {
+  const manifestJsonPath = path.join(BUILT_HTML_DIR, 'manifest.json');
+  res.sendFile(manifestJsonPath);
+});
+
 //Reactアプリのindex.htmlを提供
 app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(BUILT_HTML_DIR, 'index.html'));
