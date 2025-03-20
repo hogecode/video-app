@@ -133,7 +133,7 @@ app.use('/static', express.static(path.join(BUILT_HTML_DIR, 'static')));
 
 // service-worker.js エンドポイントを設定
 app.get('/service-worker.js', (req, res) => {
-  const serviceWorkerPath = path.join(BUILT_HTML_DIR, 'serviceWorker.js');
+  const serviceWorkerPath = path.join(BUILT_HTML_DIR, 'service-worker.js');
   res.sendFile(serviceWorkerPath);
 });
 
