@@ -22,6 +22,7 @@ import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
 import { STREAM_URL } from '../constants';
 import { Comment } from '../types';
 import TemplatePage from './TemplatePage';
+import { CommentRounded, ListAlt, Search, Timer, VideoLibrary } from '@mui/icons-material';
 
 // import VideoComments from 'components/VideoComments';
 
@@ -45,6 +46,7 @@ const Video: React.FC = () => {
   const [commentDelay, setCommentDelay] = useState<number>(0); // コメント遅延時間
   const { settings } = useSettings();
   const [videoHeight, setVideoHeight] = useState(250);
+
   const handleCommentDelay = (newDelay: number) => {
     setCommentDelay(newDelay);
   };
@@ -131,25 +133,6 @@ const Video: React.FC = () => {
       setLoading(false);
     }
   }, [isDataFetched, videoId, selectedVideo, hlsSource]); // isDataFetchedを依存関係に追加
-
-  // Fix: なぜか動作しない
-  // ページ離脱時に再生時間を保存
-  /*
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      // 動画の現在の再生時間をローカルストレージに保存
-      localStorage.setItem(`videoTime_${hlsSource}`, currentTime.toString());
-    };
-
-    // beforeunloadイベントリスナーを追加
-    window.addEventListener('unload', handleBeforeUnload);
-
-    // クリーンアップ: コンポーネントがアンマウントされる際にリスナーを解除
-    return () => {
-      window.removeEventListener('unload', handleBeforeUnload);
-    };
-  }, [hlsSource]);
-  */
 
   // 初期表示時とリサイズ時に高さを調整する
   // Memo: ビデオの高さに合わせてコメントの高さを調整するため
@@ -254,12 +237,25 @@ const Video: React.FC = () => {
           value={selectedTab}
           onChange={handleTabChange}
           aria-label="Video player tabs"
+          centered
         >
-          <Tab label="動画データ" value="Meta Data" />
-          <Tab label="コメント" value="Video Comments" />
-          <Tab label="コメント遅延" value="CommentDelayControl" />
-          <Tab label="コメント検索" value="CommentSearch" />
-          <Tab label="ビデオリスト" value="Video List" />
+          <Tab value="Meta Data" icon={<ListAlt />} iconPosition="start" />
+          <Tab
+            value="Video Comments"
+            icon={<CommentRounded />}
+            iconPosition="start"
+          />
+          <Tab
+            value="CommentDelayControl"
+            icon={<Timer />}
+            iconPosition="start"
+          />
+          <Tab value="CommentSearch" icon={<Search />} iconPosition="start" />
+          <Tab
+            value="Video List"
+            icon={<VideoLibrary />}
+            iconPosition="start"
+          />
         </Tabs>
 
         {/* タブに応じたコンテンツの表示 */}

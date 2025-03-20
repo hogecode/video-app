@@ -104,14 +104,18 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({
   const fetchVideos = useCallback(async () => {
     try {
       const videos: Video[] = await UseFetch<Video[]>('/api/files'); // APIから動画を取得
-      setVideos(videos); // 取得した動画を状態にセット
-      setFilteredVideos(videos);
+      // fileNameで重複を取り除く
+      const uniqueVideos = videos.filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.fileName === value.fileName)
+      );
+      setVideos(uniqueVideos); // 重複を取り除いた動画を状態にセット
+      // filterVideosByYear(selectedYear); //　なぜか書くとストレージの値がリセットされる
     } catch (error) {
       console.error('Failed to fetch videos:', error);
     }
   }, []);
 
-  // ローカルストレージに保存（videosまたはselectedVideoが更新されたとき）
   useEffect(() => {
     if (videos.length > 0) {
       localStorage.setItem('videos', JSON.stringify(videos)); // videosをローカルストレージに保存
@@ -130,7 +134,9 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({
 
   useEffect(() => {
     if (selectedYear !== null) {
-      localStorage.setItem('selectedYear', JSON.stringify(selectedYear));
+      localStorage.setItem('selectedYear', JSON.stringify(selectedYear)); 
+    } else {
+      localStorage.setItem('selectedYear', JSON.stringify(null));
     }
   }, [selectedYear]);
 

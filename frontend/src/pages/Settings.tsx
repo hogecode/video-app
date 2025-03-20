@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Add, ArrowBack, Close, Delete } from '@mui/icons-material';
+import { Add, ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
-    Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider,
-    FormControl, IconButton, Input, InputAdornment, ListItem, TextField, Typography
-} from '@mui/material';
+  Autocomplete,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  ListItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 
-import { useSettings } from '../context/SettingsContext';
-import TemplatePage from './TemplatePage';
+import { useSettings } from "../context/SettingsContext";
+import TemplatePage from "./TemplatePage";
 
 const Settings: React.FC = () => {
   const { settings, updateSettings } = useSettings();
-  const [ngPattern, setNgPattern] = useState('');
+  const [ngPattern, setNgPattern] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(true);
   const navigate = useNavigate();
 
@@ -21,12 +34,14 @@ const Settings: React.FC = () => {
   };
 
   const fontOptions = [
-    'Arial',
-    'Roboto-Bold',
-    'OpenSans-Medium',
-    'OpenSans-Bold',
-    'Times New Roman',
+    "Arial",
+    "Roboto-Bold",
+    "OpenSans-Medium",
+    "OpenSans-Bold",
+    "Times New Roman",
   ];
+
+  const MAX_NG_LENGTH = 10;
 
   /*
   const handleClose = () => {
@@ -41,7 +56,7 @@ const Settings: React.FC = () => {
         ...settings,
         ngPatterns: [...settings.ngPatterns, ngPattern],
       });
-      setNgPattern('');
+      setNgPattern("");
     }
   };
 
@@ -76,23 +91,23 @@ const Settings: React.FC = () => {
           const importedSettings = JSON.parse(reader.result as string);
           updateSettings(importedSettings); // 読み込んだ内容で設定を更新
         } catch (error) {
-          window.alert('Error parsing the JSON file:');
+          window.alert("Error parsing the JSON file:");
         }
       };
 
       // ファイル読み込み中にエラーが発生した場合
       reader.onerror = (error) => {
-        console.error('File reading error:', error);
+        console.error("File reading error:", error);
       };
     } else {
-      window.alert('No file selected');
+      window.alert("No file selected");
     }
   };
 
   // リセット機能
   const handleReset = () => {
     updateSettings({
-      font: 'Arial',
+      font: "Arial",
       ngPatterns: [],
     });
   };
@@ -104,22 +119,22 @@ const Settings: React.FC = () => {
         fullWidth
         maxWidth="xs"
         sx={{
-          '& .MuiDialogContent-root': {
+          "& .MuiDialogContent-root": {
             // display: 'flex',
             // justifyContent: 'center', // 中央揃え
-            paddingTop: '12px',
-            borderRadius: '8px',
+            paddingTop: "12px",
+            borderRadius: "8px",
           },
-          '& .MuiDialog-paper': {
-            borderRadius: '8px',
+          "& .MuiDialog-paper": {
+            borderRadius: "8px",
           },
         }}
       >
         <DialogTitle
           sx={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
           }}
         >
           <IconButton
@@ -128,7 +143,7 @@ const Settings: React.FC = () => {
             onClick={handleRedirect}
             aria-label="home"
             sx={{
-              position: 'absolute',
+              position: "absolute",
               left: 8,
               top: 8,
             }}
@@ -142,7 +157,7 @@ const Settings: React.FC = () => {
             onClick={handleRedirect}
             aria-label="close"
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
             }}
@@ -153,7 +168,7 @@ const Settings: React.FC = () => {
         <DialogContent>
           <div>
             {/* フォント設定 */}
-            <FormControl margin="normal" sx={{ width: '50%' }}>
+            <FormControl margin="normal" sx={{ width: "50%" }}>
               <Autocomplete
                 value={settings.font}
                 onChange={handleFontChange}
@@ -193,9 +208,20 @@ const Settings: React.FC = () => {
                 {settings.ngPatterns.map((pattern, index) => (
                   <ListItem
                     key={index}
-                    sx={{ display: 'flex', alignItems: 'center' }}
+                    sx={{ display: "flex", alignItems: "center" }}
                   >
-                    <Typography variant="body2">{pattern}</Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        overflow: pattern.length > MAX_NG_LENGTH ? "hidden" : "visible",
+                        textOverflow:
+                          pattern.length > MAX_NG_LENGTH ? "ellipsis" : "unset",
+                        whiteSpace: pattern.length > MAX_NG_LENGTH ? "nowrap" : "unset",
+                        maxWidth: "100%",
+                      }}
+                    >
+                      {pattern}
+                    </Typography>
                     <IconButton
                       color="primary"
                       onClick={() => handleRemoveNgPattern(pattern)}
@@ -212,9 +238,9 @@ const Settings: React.FC = () => {
               {/* インポートボタン */}
               <Input
                 type="file"
-                inputProps={{ accept: '.json' }} // JSONファイルのみ選択できるように制限
+                inputProps={{ accept: ".json" }} 
                 onChange={handleImport}
-                sx={{ display: 'none' }} // Inputを非表示にしてボタンを使用
+                sx={{ display: "none" }} // Inputを非表示にしてボタンを使用
                 id="import-settings-file"
               />
               <label htmlFor="import-settings-file">
@@ -222,7 +248,7 @@ const Settings: React.FC = () => {
                   variant="contained"
                   color="primary"
                   component="span"
-                  sx={{ width: '200px' }}
+                  sx={{ width: "200px" }}
                 >
                   設定をインポート
                 </Button>
@@ -231,14 +257,14 @@ const Settings: React.FC = () => {
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ width: '200px' }}
+                sx={{ width: "200px" }}
                 onClick={() => {
                   const blob = new Blob([JSON.stringify(settings, null, 2)], {
-                    type: 'application/json',
+                    type: "application/json",
                   });
-                  const link = document.createElement('a');
+                  const link = document.createElement("a");
                   link.href = URL.createObjectURL(blob);
-                  link.download = 'settings.json';
+                  link.download = "settings.json";
                   link.click();
                 }}
               >
@@ -251,7 +277,7 @@ const Settings: React.FC = () => {
                 color="primary"
                 size="small"
                 onClick={handleReset}
-                sx={{ width: '200px' }}
+                sx={{ width: "200px" }}
               >
                 設定をリセット
               </Button>
