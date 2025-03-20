@@ -283,22 +283,36 @@ export async function syncXMLWithJson(): Promise<void> {
 
 /**
  * config.iniファイルからフォルダパスを取得する関数
+ * Refactor: tryを使う
  * @returns {string[]} フォルダパスの配列
  */
-function getFolderPaths(): string[] {
+export function getFolderPaths(): string[] {
   console.log('[FileService.ts] [getFolderPaths]');
+
   // config.iniファイルを読み込む
   const config = ini.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-　console.log('configファイルのパスは', CONFIG_PATH);
+  console.log('configファイルのパスは', CONFIG_PATH);
 
-  // paths を取得
-  const paths = config.folders.paths;
+  // 'paths' で始まるキー名を取得して、それぞれの値を処理
+  const folderPaths: string[] = [];
 
-  // もし改行で分割されていない場合、自分で改行を分割
-  const folderPaths = paths.split('\r?\n').map((folderPath: string) => folderPath.trim());
+  // 'paths'で始まるキーをフィルタリングして処理
+  for (const key in config.folders) {
+    if (key.startsWith('paths')) {
+      const paths = config.folders[key];
+      
+      // 改行で分割し、不要な空白を削除
+      const pathsArray = paths
+        .split(/\r?\n/)  // 改行で分割
+        .map((folderPath: string) => folderPath.trim())  // 各パスの前後の空白を削除
+        .filter(Boolean);  // 空文字列を除外
+
+      // folderPathsに追加
+      folderPaths.push(...pathsArray);
+    }
+  }
 
   console.log('動画のフォルダのパスは', folderPaths);
-
   console.log('getFolderPaths()の処理が完了しました');
 
   return folderPaths;
