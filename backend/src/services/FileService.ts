@@ -1,14 +1,22 @@
 //Refactor: 肥大化しそうなのでutilsフォルダに汎用関数は移動する
 
 import * as fs from 'fs';
-import * as path from 'path';
 import * as ini from 'ini';
-import { addVideo, deleteVideoByFilePath, getAllVideos } from '../repositories/VideoRepository';
+import * as path from 'path';
+
 import { Video, XMLCommentFile } from '@prisma/client';
+
 import { COMMENT_DIR, CONFIG_PATH } from '../constants';
-import { addXMLCommentFile, deleteXMLCommentFileByFilePath, getAllXMLCommentFiles } from '../repositories/CommentRepository';
-import { cleanupHlsFiles, createHlsForVideos, createHlsStream, takeScreenshot } from './VideoService';
-import { convertXmlToJsonAndSave, getCommentCount, getCommentTimestamp } from './CommentFileService';
+import {
+    addXMLCommentFile, deleteXMLCommentFileByFilePath, getAllXMLCommentFiles
+} from '../repositories/CommentRepository';
+import { addVideo, deleteVideoByFilePath, getAllVideos } from '../repositories/VideoRepository';
+import {
+    convertXmlToJsonAndSave, getCommentCount, getCommentTimestamp
+} from './CommentFileService';
+import {
+    cleanupHlsFiles, createHlsForVideos, createHlsStream, takeScreenshot
+} from './VideoService';
 
 /**
  * XMLCommentFileの情報をVideoテーブルの値に追加する非同期関数

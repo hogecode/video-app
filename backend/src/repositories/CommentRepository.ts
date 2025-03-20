@@ -5,8 +5,9 @@
  * ToDo: コメント数や時間などはコメントサービスを利用
  */
 
-import { XMLCommentFile } from "@prisma/client";
-import prisma from "../prisma";
+import { XMLCommentFile } from '@prisma/client';
+
+import prisma from '../prisma';
 
 /**
  * XMLCommentFileテーブルからすべてのレコードを取得する非同期関数

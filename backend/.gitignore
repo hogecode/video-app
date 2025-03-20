@@ -3,4 +3,7 @@
 node_modules
 dist
 
+dev.db
+migrations/*_init/
+logs/*
 

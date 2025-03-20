@@ -1,9 +1,10 @@
 // XMLファイル関連の処理を各ファイル
 
 import fs from 'fs';
-import { parseStringPromise } from 'xml2js';
-import { COMMENT_DIR } from '../constants';
 import path from 'path';
+import { parseStringPromise } from 'xml2js';
+
+import { COMMENT_DIR } from '../constants';
 
 /**
  * XMLファイル内の`chat`フィールドの数を取得する関数

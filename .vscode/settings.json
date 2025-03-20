@@ -28,7 +28,7 @@
         "editor.tabSize": 2,
     
         // 自動保存の設定
-        "files.autoSave": "onWindowChange",
+        "files.autoSave": "afterDelay",
 
         "editor.codeActionsOnSave": {
             "source.fixAll.eslint": "explicit"

@@ -1,6 +1,0 @@
-
-pm2 start ./video_app.exe --name "video-app"
-
-pm2 logs video_app
-
-pm2 delete video_app

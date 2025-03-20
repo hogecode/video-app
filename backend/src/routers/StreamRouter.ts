@@ -1,11 +1,15 @@
 
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
+
+import { Video } from '@prisma/client';
+
 import { getVideoById, incrementVideoViews } from '../repositories/VideoRepository';
-import  {createHlsForVideoById, createHlsStream} from '../services/VideoService'
-import { mergeVideosWithComments, syncVideosAndXMLCommentFilesWithDatabase} from '../services/FileService';
 import { addWatchHistory } from '../repositories/WatchHistoryRepository';
 import { convertXmlToJson } from '../services/CommentFileService';
-import { Video } from '@prisma/client';
+import {
+    mergeVideosWithComments, syncVideosAndXMLCommentFilesWithDatabase
+} from '../services/FileService';
+import { createHlsForVideoById, createHlsStream } from '../services/VideoService';
 
 // Memo: prefixは/api/stream
 const router = Router();

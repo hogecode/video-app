@@ -1,6 +1,7 @@
 
-import prisma from '../prisma'
-import {Video} from '@prisma/client';
+import { Video } from '@prisma/client';
+
+import prisma from '../prisma';
 
 /**
  * Videoテーブルの全レコードを取得する関数

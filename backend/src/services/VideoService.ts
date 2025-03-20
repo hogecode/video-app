@@ -4,8 +4,9 @@
  */
 
 import ffmpeg from 'fluent-ffmpeg';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
 import { SCREENSHOT_DIR, STREAM_DIR } from '../constants';
 import { getAllVideos, getVideoById } from '../repositories/VideoRepository';
 

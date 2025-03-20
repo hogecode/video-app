@@ -4,8 +4,11 @@
  * Memo: 再生履歴を取得 → マージする関数を作る必要があるので面倒
  */
 
-import { Router, Request, Response } from 'express';
-import { deleteAllWatchHistory, deleteWatchHistoryById } from "../repositories/WatchHistoryRepository";
+import { Request, Response, Router } from 'express';
+
+import {
+    deleteAllWatchHistory, deleteWatchHistoryById
+} from '../repositories/WatchHistoryRepository';
 
 const router = Router();
 

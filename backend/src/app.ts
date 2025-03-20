@@ -1,15 +1,16 @@
-  import express, { Request, Response, NextFunction } from 'express';
-  import path from 'path';
-  import cors from 'cors';
-  import compression from 'compression';
-  import FileRouter from './routers/FileRouter';
-  import WatchHistoryRouter from './routers/WatchHistoryRouter';
-  import StreamRouter from './routers/StreamRouter';
-  import { syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson } from './services/FileService';
-  import logger from './logs/logger';
-  import { BUILT_HTML_DIR, STATIC_DIR } from './constants';
-  import ffmpeg from 'fluent-ffmpeg';
-  import ffmpegPath from 'ffmpeg-static';
+import compression from 'compression';
+import cors from 'cors';
+import express, { NextFunction, Request, Response } from 'express';
+import ffmpegPath from 'ffmpeg-static';
+import ffmpeg from 'fluent-ffmpeg';
+import path from 'path';
+
+import { BUILT_HTML_DIR, STATIC_DIR } from './constants';
+import logger from './logs/logger';
+import FileRouter from './routers/FileRouter';
+import StreamRouter from './routers/StreamRouter';
+import WatchHistoryRouter from './routers/WatchHistoryRouter';
+import { syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson } from './services/FileService';
 import { createHlsForVideos } from './services/VideoService';
 
 // Expressアプリケーションの初期化
@@ -20,14 +21,6 @@ const port = 3002;
 
 // Memo: 自己ホストアプリだしセキュリティの心配はあまりない
 // Memo: 静的ファイルの配信にCORSが引っかかるのでとりあえずこれで設定
-app.use(cors({
-  origin: '*', // 全てのオリジンを許可
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 許可するHTTPメソッド
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'], // 許可するHTTPヘッダー
-  preflightContinue: false, // プリフライトリクエストに対して応答しない
-  optionsSuccessStatus: 200 // OPTIONSリクエストに200ステータスを返す
-}));
-
 app.options('*', cors());
 
 // 重いエンドポイントがあるので圧縮を有効にする
@@ -37,7 +30,6 @@ app.use(compression());
 // /streamsの形でHLSを配信する
 // assets/screenshots/sample03.png, assets/stream/sample01/sample01.m3u8
 app.use('/assets', express.static(STATIC_DIR));
-
 
 // ミドルウェア定義
 // Refactor: ミドルウェアフォルダへ移動
@@ -66,7 +58,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-
 // 初期化処理
 // Refactor: ここでffmpegのパスを設定するのは適切ではない
 // ffmpeg と ffprobe のパスを設定
@@ -83,8 +74,8 @@ setFfmpegPath();
 // フォルダとDBとの同期を実行
 async function executeSyncFunctions() {
   await syncVideosAndXMLCommentFilesWithDatabase(); // 最初の非同期関数が完了するまで待つ
-  await syncXMLWithJson();     // 最後の非同期関数が完了するまで待つ  
-  await createHlsForVideos();  // 次の非同期関数が完了するまで待つ
+  await syncXMLWithJson(); // 最後の非同期関数が完了するまで待つ
+  await createHlsForVideos(); // 次の非同期関数が完了するまで待つ
 }
 
 // 実行
@@ -100,7 +91,6 @@ app.get('/hello-world', (req: Request, res: Response) => {
   res.send('Hello, World!');
 });
 
-
 // Memo: 一時的に/staticに変更
 // reactのビルドファイルを配信する
 app.use('/static', express.static(path.join(BUILT_HTML_DIR, 'static')));
@@ -109,7 +99,6 @@ app.use('/static', express.static(path.join(BUILT_HTML_DIR, 'static')));
 app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(BUILT_HTML_DIR, 'index.html'));
 });
-
 
 // サーバーの起動
 app.listen(port, () => {

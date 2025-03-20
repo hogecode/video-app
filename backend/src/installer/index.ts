@@ -3,14 +3,15 @@
 //Example: pkg . --targets node18-win-x64 --output video_app.exe
 //Note: GitHubからクローンするので変更したらすぐcommitする必要
 
-import inquirer from 'inquirer';
-import simpleGit, { SimpleGit } from 'simple-git';
-import fs from 'fs';
-import path from 'path';
+import { exec } from 'child_process';
 // import args from 'args';
 import express from 'express';
-import { exec } from 'child_process';
+import fs from 'fs';
+import inquirer from 'inquirer';
+import path from 'path';
+import simpleGit, { SimpleGit } from 'simple-git';
 import { promisify } from 'util';
+
 import { writeFolderPathsToConfig } from '../services/FileService';
 
 // 定数設定

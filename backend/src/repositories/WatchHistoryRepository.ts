@@ -3,8 +3,9 @@
  * 再生履歴をすべて取得する関数、追加する関数、すべて消去する関数
  */
 
-import { WatchHistory } from "@prisma/client";
-import prisma from "../prisma";
+import { WatchHistory } from '@prisma/client';
+
+import prisma from '../prisma';
 
 /**
  * WatchHistoryテーブルに新しい履歴を追加する非同期関数

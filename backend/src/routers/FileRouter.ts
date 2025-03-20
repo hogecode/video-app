@@ -3,23 +3,22 @@
 //Memo: /files/:fileが叩かれた時にHLS関連の処理を行う
 //Memo: CommentRouterも不要
 
-import { Router, Request, Response } from 'express';
-import {
-  getVideoById,
-  incrementVideoViews,
-} from '../repositories/VideoRepository';
-import { createHlsForVideos, createHlsStream } from '../services/VideoService';
-import {
-  mergeVideosWithComments,
-  syncVideosAndXMLCommentFilesWithDatabase,
-  syncXMLWithJson,
-} from '../services/FileService';
-import { addWatchHistory } from '../repositories/WatchHistoryRepository';
-import { convertXmlToJson, convertXmlToJsonAndSave, readCommentJsonFile } from '../services/CommentFileService';
-import { Video } from '@prisma/client';
+import { Request, Response, Router } from 'express';
 import * as fs from 'fs';
-import { COMMENT_DIR } from '../constants';
 import path from 'path';
+
+import { Video } from '@prisma/client';
+
+import { COMMENT_DIR } from '../constants';
+import { getVideoById, incrementVideoViews } from '../repositories/VideoRepository';
+import { addWatchHistory } from '../repositories/WatchHistoryRepository';
+import {
+    convertXmlToJson, convertXmlToJsonAndSave, readCommentJsonFile
+} from '../services/CommentFileService';
+import {
+    mergeVideosWithComments, syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
+} from '../services/FileService';
+import { createHlsForVideos, createHlsStream } from '../services/VideoService';
 
 // Memo: prefixは/api/files
 const router = Router();
