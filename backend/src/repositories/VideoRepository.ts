@@ -11,17 +11,15 @@ import prisma from '../prisma';
  */
 export async function getAllVideos(): Promise<Video[]> {
   try {
-    console.log(['VideoRepository.ts'],['getAllVideos()']);
     const videos = await prisma.video.findMany();
+    console.log('getAllVideos()の処理が完了しました');
     return videos; // 取得した動画のデータを返す
-    console.log('DBからビデオ情報を取得しました');
+
   } catch (error) {
     console.error('Error fetching videos:', error);
     throw new Error('Failed to fetch videos');
   }
 }
-
-getAllVideos().then((videos) => {console.log(videos)})
 
 /**
  * 特定のVideoをIDで取得する関数

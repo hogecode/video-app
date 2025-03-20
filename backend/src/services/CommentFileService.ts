@@ -34,16 +34,15 @@ export async function getCommentCount(filePath: string): Promise<number> {
  */
 export async function getCommentTimestamp(filePath: string): Promise<Date> {
   try {
-    console.log('[CommentFileService.ts] [getCommentTimestamp]');
     // XMLファイルを同期的に読み込む
     const xmlData = fs.readFileSync(filePath, 'utf-8');
-    console.log('XMLファイル', filePath, 'を読み込みました');
+    // console.log('XMLファイル', filePath, 'を読み込みました');
     // XMLをJavaScriptオブジェクトに変換
     const parsedData = await parseStringPromise(xmlData);
 
     // chat要素をすべて取得
     const chats = parsedData.packet.chat;
-    console.log('コメント数は', chats.length, 'です');
+    // console.log('コメント数は', chats.length, 'です');
 
     if (!chats || chats.length === 0) {
       throw new Error('No chat elements found in the XML');
@@ -52,15 +51,15 @@ export async function getCommentTimestamp(filePath: string): Promise<Date> {
     // 最も早いdateを持つchatを探す
     // Memo: コメントは_、dateは$で取得することに注意
     let earliestDateChat = chats[0];
-    console.log('最初のコメントは', earliestDateChat, 'です');
-    console.log('最初のコメントのdateは', earliestDateChat.$.date, 'です');
+    // console.log('最初のコメントは', earliestDateChat, 'です');
+    // console.log('最初のコメントのdateは', earliestDateChat.$.date, 'です');
 
     for (const chat of chats) {
       if (chat.$.date && chat.$.date < earliestDateChat.$.date) {
         earliestDateChat = chat;
       }
     }
-    console.log('最も早いコメントは', earliestDateChat.$.date, 'です');
+    // console.log('最も早いコメントは', earliestDateChat.$.date, 'です');
 
     if (!earliestDateChat.$.date || earliestDateChat.$.date.length === 0) {
       throw new Error('Missing date in the chat element');
@@ -71,7 +70,7 @@ export async function getCommentTimestamp(filePath: string): Promise<Date> {
 
     // タイムスタンプ（ミリ秒単位）を計算
     const timestamp = new Date(parseInt(date) * 1000); // Dateオブジェクトを作成（ミリ秒単位）
-    console.log('そのコメントのタイムスタンプは', timestamp, 'です');
+    // console.log('そのコメントのタイムスタンプは', timestamp, 'です');
     
     return timestamp;
   } catch (error) {

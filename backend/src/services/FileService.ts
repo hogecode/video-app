@@ -74,7 +74,7 @@ export async function syncVideosAndXMLCommentFilesWithDatabase() {
       syncXMLCommentFilesWithDatabase(),  // syncXMLCommentFilesWithDatabase を非同期で実行
     ]);
 
-    console.log('syncXMLCommentFilesWithDatabase()の処理が完了しました');
+    console.log('syncVideosAndXMLCommentFilesWithDatabase()の処理が完了しました');
   } catch (error) {
     console.error('エラーが発生しました', error);
   }
@@ -224,7 +224,7 @@ async function syncXMLCommentFilesWithDatabase(): Promise<void> {
         }
       }
     }
-    console.log('syncXMLCommentFilesWithDatabaseの処理は完了しました');
+    console.log('syncXMLCommentFilesWithDatabase()の処理が完了しました');
   } catch (error) {
     console.error('Error syncing XMLCommentFiles with database:', error);
     throw new Error('Failed to sync XMLCommentFiles with database');
@@ -265,7 +265,7 @@ export async function syncXMLWithJson(): Promise<void> {
 
         // XMLファイルに対応するJSONが存在しない場合、XMLをJSONに変換して保存
         const xmlFilePath = path.join(folderPath, xmlFile);
-        console.log(`XMLファイルからJSONを生成します: ${xmlFilePath}`);
+        // console.log(`XMLファイルからJSONを生成します: ${xmlFilePath}`);
 
         // XMLをJSONに変換して保存する関数を呼び出す
         await convertXmlToJsonAndSave(xmlFilePath);
@@ -273,7 +273,7 @@ export async function syncXMLWithJson(): Promise<void> {
       }
     }
 
-    console.log('syncXMLWithJsonの処理は完了しました');
+    console.log('syncXMLWithJson()の処理は完了しました');
   } catch (error) {
     console.error('Error syncing XML with JSON', error);
     throw new Error('Failed to sync XML with JSON');
@@ -287,11 +287,10 @@ export async function syncXMLWithJson(): Promise<void> {
  * @returns {string[]} フォルダパスの配列
  */
 export function getFolderPaths(): string[] {
-  console.log('[FileService.ts] [getFolderPaths]');
 
   // config.iniファイルを読み込む
   const config = ini.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-  console.log('configファイルのパスは', CONFIG_PATH);
+  // console.log('configファイルのパスは', CONFIG_PATH);
 
   // 'paths' で始まるキー名を取得して、それぞれの値を処理
   const folderPaths: string[] = [];
@@ -311,9 +310,9 @@ export function getFolderPaths(): string[] {
       folderPaths.push(...pathsArray);
     }
   }
-
-  console.log('動画のフォルダのパスは', folderPaths);
-  console.log('getFolderPaths()の処理が完了しました');
+  // Memo: 何度も呼ばれるのでコメントアウト
+  //console.log('動画のフォルダのパスは', folderPaths);
+  //console.log('getFolderPaths()の処理が完了しました');
 
   return folderPaths;
 }
@@ -326,7 +325,6 @@ export function getFolderPaths(): string[] {
  * @returns {Promise<string[]>} フォルダ内の.mp4ファイルの絶対パスの配列
  */
 async function getMp4FilesFromFolderAsync(folderPath: string): Promise<string[]> {
-  console.log(['FileService.ts'],['getMp4FilesFromFolderAsync()']);
   // フォルダ内のファイルを非同期で取得
   const files = await fs.promises.readdir(folderPath);
 

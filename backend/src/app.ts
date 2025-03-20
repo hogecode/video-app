@@ -22,16 +22,38 @@ const app = express();
 const port = 3002;
 
 // Memo: 自己ホストアプリだしセキュリティの心配はあまりない
+app.use(cors({
+  origin: '*', // 全てのオリジンを許可
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 許可するHTTPメソッド
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'], // 許可するHTTPヘッダー
+  preflightContinue: false, // プリフライトリクエストに対して応答しない
+  optionsSuccessStatus: 200 // OPTIONSリクエストに200ステータスを返す
+}));
+
 app.options('*', cors());
 
 // 重いエンドポイントがあるので圧縮を有効にする
 // Memo: gzipはJSONには有効だが、バイナリには効果が薄い
 app.use(compression());
 
-app.use((req, res, next) => {
-  res.setHeader('ETag', etag(JSON.stringify(res.json)));
+// ミドルウェアを使ってレスポンスをキャプチャし、ETagを設定
+app.use((req: Request, res: Response, next) => {
+  // 元のsendメソッドを保持
+  const originalSend = res.send;
+
+  // sendメソッドをオーバーライド
+  res.send = function (body: any): Response<any, Record<string, any>> {
+    if (body) {
+      // ETagを生成し、レスポンスヘッダーに設定
+      res.setHeader('ETag', etag(JSON.stringify(body)));
+    }
+    // 元のsendメソッドを呼び出し、レスポンスを送信
+    return originalSend.call(this, body);
+  };
+
   next();
 });
+
 
 // ミドルウェア定義
 // Refactor: ミドルウェアフォルダへ移動
