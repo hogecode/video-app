@@ -1,7 +1,9 @@
 
 import React from 'react';
-import { IconButton } from '@mui/material';
+
 import { ArrowUpward } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+
 import useScrollToTop from '../hooks/useScrollToTop';
 
 const ScrollToTopButton = () => {

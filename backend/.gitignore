@@ -5,5 +5,5 @@ dist
 
 dev.db
 migrations/*_init/
-logs/*
+logs/*.log
 

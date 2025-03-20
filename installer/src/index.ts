@@ -3,15 +3,14 @@
 //Example: pkg . --targets node18-win-x64 --output video_app.exe
 //Note: GitHubからクローンするので変更したらすぐcommitする必要
 
-import inquirer from 'inquirer';
-import simpleGit, { SimpleGit } from 'simple-git';
-import fs from 'fs';
-import path from 'path';
 // import args from 'args';
 import { exec } from 'child_process';
+import fs from 'fs';
+import ini from 'ini';
+import inquirer from 'inquirer';
+import path from 'path';
+import simpleGit, { SimpleGit } from 'simple-git';
 import { promisify } from 'util';
-import ini from 'ini'
-
 
 // 定数設定
 const REPO_URL = 'https://github.com/shun103100000/video_app.git'; // GitHubのリポジトリURL

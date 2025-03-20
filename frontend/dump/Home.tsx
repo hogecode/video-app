@@ -1,10 +1,12 @@
 //ToDo: fetchしてアイコンかリスト表示のみ切り替える
 
-import React, { useCallback, useEffect, useState } from 'react';
-import useVideoStore from '../../dump/stores/VideoStore';
-import { Card, CardContent, Typography,  Button, Grid, CircularProgress } from '@mui/material';
-import { Video } from 'types';
 import UseFetch from 'hooks/UseFetch';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Video } from 'types';
+
+import { Button, Card, CardContent, CircularProgress, Grid, Typography } from '@mui/material';
+
+import useVideoStore from '../../dump/stores/VideoStore';
 
 const VideoList: React.FC = () => {
   /*

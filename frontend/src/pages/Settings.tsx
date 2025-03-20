@@ -1,30 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { Add, ArrowBack, Close, Delete } from '@mui/icons-material';
 import {
-  TextField,
-  Button,
-  FormControl,
-  Autocomplete,
-  Input,
-  Box,
-  IconButton,
-  DialogActions,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  Divider,
-  InputAdornment,
-  ListItem,
+    Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider,
+    FormControl, IconButton, Input, InputAdornment, ListItem, TextField, Typography
 } from '@mui/material';
+
 import { useSettings } from '../context/SettingsContext';
 import TemplatePage from './TemplatePage';
-import {
-  Add,
-  ArrowBack,
-  Close,
-  Delete,
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 
 const Settings: React.FC = () => {
   const { settings, updateSettings } = useSettings();

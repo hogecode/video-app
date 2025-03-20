@@ -4,8 +4,9 @@ import { useVideoContext } from 'context/VideoContext';
 import Hls from 'hls.js';
 import Plyr from 'plyr';
 import React, { useEffect, useRef } from 'react';
-import useDoubleTapSeek from './useDoubleTapSeek';
 import { useNavigate } from 'react-router-dom';
+
+import useDoubleTapSeek from './useDoubleTapSeek';
 
 interface VideoPlayerProps {
   source: string; // sourceをプロップスとして受け取る

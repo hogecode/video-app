@@ -1,38 +1,25 @@
 // ToDo: fetchしてアイコンかリスト表示のみ切り替える
 // ToDo: サムネ表示、UI見直す
 
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Typography,
-  Grid,
-  CircularProgress,
-  Box,
-  IconButton,
-  Button,
-  Chip,
-} from '@mui/material';
-import {
-  ArrowDownward,
-  ArrowUpward,
-  CalendarToday,
-  FileCopy,
-  GridView,
-  List,
-  PlayArrow,
-  Shuffle,
-  ViewModule,
-} from '@mui/icons-material';
-import { useVideoContext } from 'context/VideoContext';
-import { useNavigate } from 'react-router-dom';
-import { Video } from 'types';
-import TemplatePage from './TemplatePage';
-import { SCROLL_SPEED } from '../constants';
-import useScrollSpeed from 'hooks/useScrollSpeed';
-import FilterChips from 'components/FilterChips';
-import GridVideoList from 'components/GridVideoList';
 import CenteredVideoList from 'components/CenteredVideoList';
 import CenteredVideoListWithoutImage from 'components/CenteredVideoListWithoutImage';
+import FilterChips from 'components/FilterChips';
+import GridVideoList from 'components/GridVideoList';
+import { useVideoContext } from 'context/VideoContext';
+import useScrollSpeed from 'hooks/useScrollSpeed';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from 'react-use';
+import { Video } from 'types';
+
+import {
+    ArrowDownward, ArrowUpward, CalendarToday, FileCopy, GridView, List, PlayArrow, Shuffle,
+    ViewModule
+} from '@mui/icons-material';
+import { Box, Button, Chip, CircularProgress, Grid, IconButton, Typography } from '@mui/material';
+
+import { SCROLL_SPEED } from '../constants';
+import TemplatePage from './TemplatePage';
 
 const VideoList: React.FC = () => {
   const {

@@ -2,11 +2,12 @@
 //ToDo: hls機能、コメント表示は後ででいい
 //Refactor: componentsに後で分ける
 
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import Plyr from 'plyr'; // Plyr のインポート
 import 'plyr/dist/plyr.css'; // Plyr のスタイルもインポート
-import  './Video.css';
+import './Video.css';
+
+import Plyr from 'plyr'; // Plyr のインポート
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const Video: React.FC = () => {
   const { video } = useParams(); // 動的ルートパラメータを取得

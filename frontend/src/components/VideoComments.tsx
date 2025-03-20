@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { List } from 'react-virtualized';
-import { Box, Typography, Grid } from '@mui/material';
+
+import { Box, Grid, Typography } from '@mui/material';
+
 import { Comment } from '../types';
 
 interface VideoCommentsProps {

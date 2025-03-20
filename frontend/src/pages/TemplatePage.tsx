@@ -1,9 +1,11 @@
 
-import React from 'react';
-import { Box} from '@mui/material';
-import Sidebar from '../components/SideBar';
-import Header from '../components/Header';
 import ScrollToTopButton from 'components/ScrollToTopButton';
+import React from 'react';
+
+import { Box } from '@mui/material';
+
+import Header from '../components/Header';
+import Sidebar from '../components/SideBar';
 
 interface TemplatePageProps {
   children: React.ReactNode; // childrenを受け取る

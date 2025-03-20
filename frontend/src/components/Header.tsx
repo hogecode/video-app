@@ -1,18 +1,13 @@
+import { useTheme } from 'context/ThemeContext';
+import UseFetch from 'hooks/UseFetch';
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+import {
+    ArrowBack, ArrowForward, Brightness4, Brightness7, Home, Refresh, Settings
+} from '@mui/icons-material';
 // eslint-disable-next-line
 import { Box, IconButton } from '@mui/material';
-import {
-  ArrowBack,
-  ArrowForward,
-  Brightness4,
-  Brightness7,
-  Home,
-  Refresh,
-  Settings,
-} from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
-import UseFetch from 'hooks/UseFetch';
-import { useTheme } from 'context/ThemeContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate(); // useNavigateフックを使って遷移操作を行う

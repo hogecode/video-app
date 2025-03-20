@@ -1,9 +1,13 @@
 
 import React from 'react';
-import { Grid, Card, CardContent, Typography, Box, Button, ImageList, ImageListItem } from '@mui/material';
+
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
-import { Video } from '../types'; // Video 型をインポート
+import {
+    Box, Button, Card, CardContent, Grid, ImageList, ImageListItem, Typography
+} from '@mui/material';
+
 import { SCREENSHOT_URL } from '../constants';
+import { Video } from '../types'; // Video 型をインポート
 
 interface VideoListProps {
   filteredVideos: Video[];

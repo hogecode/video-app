@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { Card, CardContent, Typography, Box, Button, ImageList, ImageListItem } from '@mui/material';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
-import { Video } from '../types';
-import { SCREENSHOT_URL } from '../constants';
 
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import {
+    Box, Button, Card, CardContent, ImageList, ImageListItem, Typography
+} from '@mui/material';
+
+import { SCREENSHOT_URL } from '../constants';
+import { Video } from '../types';
 
 interface VideoListProps {
   filteredVideos: Video[];

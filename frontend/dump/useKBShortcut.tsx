@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 // キーボードショートカットを処理するフック
 const useKeyboardShortcuts = (plyrRef: React.RefObject<HTMLVideoElement>) => {

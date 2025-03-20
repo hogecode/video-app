@@ -1,19 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  AccordionSummary,
-  Accordion,
-  AccordionDetails,
-  IconButton,
-} from '@mui/material';
 import { useVideoContext } from 'context/VideoContext';
-import { SCREENSHOT_URL } from '../constants';
-import { Video } from 'types';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Video } from 'types';
+
 import { ArrowBack, ArrowForward, ExpandMore } from '@mui/icons-material';
+import {
+    Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, IconButton, Typography
+} from '@mui/material';
+
+import { SCREENSHOT_URL } from '../constants';
 
 const VideoPlayerList: React.FC = () => {
   const videoContainerRef = useRef<HTMLDivElement>(null);

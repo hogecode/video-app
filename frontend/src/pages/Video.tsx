@@ -3,22 +3,26 @@
 //Refactor: componentsに後で分ける
 //Fix: selectedVideoがundefinedになる
 
-import React, { lazy, useEffect, useLayoutEffect, useState } from 'react';
 import 'plyr/dist/plyr.css'; // Plyr のスタイルもインポート
 import './Video.css';
-import { useParams } from 'react-router-dom';
-import { useVideoContext } from 'context/VideoContext';
-import UseFetch from 'hooks/UseFetch';
-import TemplatePage from './TemplatePage';
-import { STREAM_URL } from '../constants';
-import VideoPlayer from 'hooks/useHLSPlayer';
-import VideoPlayerList from 'components/VideoPlayerList';
-import { Comment } from '../types';
-import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
+
 import CommentDelayControl from 'components/CommentDelayControl';
 import CommentSearch from 'components/CommentSearch';
+import VideoPlayerList from 'components/VideoPlayerList';
 import { useSettings } from 'context/SettingsContext';
+import { useVideoContext } from 'context/VideoContext';
+import UseFetch from 'hooks/UseFetch';
+import VideoPlayer from 'hooks/useHLSPlayer';
+import React, { lazy, useEffect, useLayoutEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useLocalStorage } from 'react-use';
+
+import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
+
+import { STREAM_URL } from '../constants';
+import { Comment } from '../types';
+import TemplatePage from './TemplatePage';
+
 // import VideoComments from 'components/VideoComments';
 
 // タブのコンポーネントを遅延読み込み

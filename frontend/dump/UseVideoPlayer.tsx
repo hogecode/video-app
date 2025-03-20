@@ -1,10 +1,11 @@
 
-import * as React from "react";
-import { APITypes, PlyrProps, usePlyr } from "plyr-react";
 // import "plyr-react/dist/plyr.css";
-import Hls from "hls.js";
-import { Options } from "plyr";
-import useKeyboardShortcuts from "./useKBShortcut";
+import Hls from 'hls.js';
+import { Options } from 'plyr';
+import { APITypes, PlyrProps, usePlyr } from 'plyr-react';
+import * as React from 'react';
+
+import useKeyboardShortcuts from './useKBShortcut';
 
 const videoOptions = null;
 const videoSource = null;

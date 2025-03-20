@@ -1,13 +1,9 @@
 import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-  useEffect,
+    createContext, ReactNode, useCallback, useContext, useEffect, useState
 } from 'react';
-import UseFetch from '../../src/hooks/UseFetch'; // UseFetch をインポート
 import { Video } from 'types'; // Video 型をインポート
+
+import UseFetch from '../../src/hooks/UseFetch'; // UseFetch をインポート
 
 // コンテキストの型
 interface VideoContextType {

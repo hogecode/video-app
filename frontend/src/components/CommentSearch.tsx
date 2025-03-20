@@ -1,6 +1,10 @@
 
 import React, { useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button } from '@mui/material';
+
+import {
+    Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField
+} from '@mui/material';
+
 import { Comment } from '../types';
 
 interface CommentSearchProps {

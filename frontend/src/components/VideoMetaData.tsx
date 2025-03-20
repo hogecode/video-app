@@ -1,6 +1,8 @@
 import React from 'react';
-import { Box, Typography, Card, CardContent, IconButton } from '@mui/material';
+
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Box, Card, CardContent, IconButton, Typography } from '@mui/material';
+
 import { Video } from '../types'; // Videoの型をインポート
 
 interface VideoMetaDataProps {

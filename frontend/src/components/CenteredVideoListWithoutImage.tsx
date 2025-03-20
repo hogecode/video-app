@@ -1,7 +1,9 @@
 
 import React from 'react';
-import { Card, CardContent, Typography, Box, Button } from '@mui/material';
+
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Box, Button, Card, CardContent, Typography } from '@mui/material';
+
 import { Video } from '../types';
 
 interface VideoListProps {

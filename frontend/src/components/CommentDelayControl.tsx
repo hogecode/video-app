@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, IconButton, Typography, Box } from '@mui/material';
-import { ArrowUpward, ArrowDownward, Refresh,  ArrowBack, ArrowForward } from '@mui/icons-material';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { ArrowBack, ArrowDownward, ArrowForward, ArrowUpward, Refresh } from '@mui/icons-material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
+
 import { Comment } from '../types';
 
 interface CommentDelayControlProps {

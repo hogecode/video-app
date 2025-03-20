@@ -1,16 +1,19 @@
 //Fix: @/インポートがなぜかreactではできない
 
+import { SettingsProvider } from 'context/SettingsContext';
+import { VideoProvider } from 'context/VideoContext';
+import Settings from 'pages/Settings';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Video from './pages/Video';
-import NotFound from './pages/NotFound';
-import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { ThemeProvider, useTheme } from './context/ThemeContext'; // ThemeContext のインポート
+
 import { CssBaseline } from '@mui/material';
-import { VideoProvider } from 'context/VideoContext';
-import { SettingsProvider } from 'context/SettingsContext';
-import Settings from 'pages/Settings';
+import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+
+import { ThemeProvider, useTheme } from './context/ThemeContext'; // ThemeContext のインポート
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import Video from './pages/Video';
+
 // Fix: font faceが読み込めないので一時的にコメントアウト
 // import './styles/index.scss';
 // import './styles/index.css'

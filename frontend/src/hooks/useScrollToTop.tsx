@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const useScrollToTop = (threshold: number) => {
   const [isVisible, setIsVisible] = useState(false);

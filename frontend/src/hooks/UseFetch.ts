@@ -2,7 +2,7 @@
 //ToDo: エラーリトライなどもいずれ追加
 //ToDo: いずれはaxiosに変更する
 
-import { SERVER_URL } from "../constants";
+import { SERVER_URL } from '../constants';
 
 /**
  * 通常の非同期fetch関数

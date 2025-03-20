@@ -1,8 +1,9 @@
 //Fix: 一時的にラップしているReact.StrictModeコンポーネントを消す
 import ReactDOM from 'react-dom/client';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import * as serviceWorkerRegister from "./serviceWorkerRegister";
+import * as serviceWorkerRegister from './serviceWorkerRegister';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

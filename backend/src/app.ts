@@ -1,10 +1,10 @@
 import compression from 'compression';
 import cors from 'cors';
+import etag from 'etag';
 import express, { NextFunction, Request, Response } from 'express';
 import ffmpegPath from 'ffmpeg-static';
 import ffmpeg from 'fluent-ffmpeg';
 import path from 'path';
-import etag from 'etag';
 
 import { BUILT_HTML_DIR, STATIC_DIR } from './constants';
 import logger from './logs/logger';
@@ -12,9 +12,7 @@ import FileRouter from './routers/FileRouter';
 import StreamRouter from './routers/StreamRouter';
 import WatchHistoryRouter from './routers/WatchHistoryRouter';
 import {
-  getFolderPaths,
-  syncVideosAndXMLCommentFilesWithDatabase,
-  syncXMLWithJson,
+    getFolderPaths, syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
 } from './services/FileService';
 import { createHlsForVideos } from './services/VideoService';
 

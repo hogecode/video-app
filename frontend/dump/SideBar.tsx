@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  IconButton,
-} from '@mui/material';
-import { Menu, Home, Settings, Favorite, History } from '@mui/icons-material';
+
+import { Favorite, History, Home, Menu, Settings } from '@mui/icons-material';
+import { Box, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+
 // import { useNavigate } from 'react-router-dom';
 
 // サイドバー用のコンポーネント

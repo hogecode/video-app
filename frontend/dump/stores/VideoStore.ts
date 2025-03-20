@@ -1,8 +1,9 @@
 
 import { Video } from 'types';
-import UseFetch  from '../../src/hooks/UseFetch';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
+import UseFetch from '../../src/hooks/UseFetch';
 
 // ストアの型
 interface VideoStore {
