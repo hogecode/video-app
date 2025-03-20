@@ -54,7 +54,6 @@ async function getVideoDuration(videoFilePath: string): Promise<number> {
  */
 export async function takeScreenshot(videoFilePath: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
-    console.log(['VideoService.ts'],['takeScreenshot()']);
     // 出力先ディレクトリが存在しない場合は作成
     if (!fs.existsSync(SCREENSHOT_DIR)) {
       fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });

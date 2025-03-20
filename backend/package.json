@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test-exe": "npx ts-node src/installer/index.ts --dir \"C:\\Users\\shun1\\Downloads\\新しいフォルダー\\新しいフォルダー\" --videoFolder \"C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\sample_videos\"",
     "build-exe": "pkg dist/installer/index.js --targets node18-win-x64 --output video_app.exe",
-    "migrate-dev": "npx prisma migrate dev --schema=src/prisma/schema.prisma"
+    "migrate-dev": "npx prisma migrate dev --name init --schema=src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
