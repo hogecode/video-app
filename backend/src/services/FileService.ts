@@ -89,7 +89,6 @@ export async function syncVideosAndXMLCommentFilesWithDatabase() {
  */
 async function syncVideosWithDatabase(): Promise<void> {
   try {
-
     // iniに定義した監視するフォルダパスを取得
     const folderPaths = getFolderPaths();
 
@@ -120,7 +119,7 @@ async function syncVideosWithDatabase(): Promise<void> {
                 filePath,
                 views: 0,
                 liked: false,
-                screenshotFilePath  
+                screenshotFilePath
               };
 
               await addVideo(newVideo as Video);
@@ -131,30 +130,33 @@ async function syncVideosWithDatabase(): Promise<void> {
           }
         }
 
-        // Fix: フォルダになくてもDBから削除されない
-        // データベースに存在するがフォルダ内にないファイルを削除
-        for (const video of existingVideos) {
-          // DBのフォルダパスがフォルダのパスと一致し、フォルダ内にファイルが存在しない場合
-          if (!mp4Files.includes(video.filePath)) {
-            try {
-              // フォルダ内に存在しないファイルを削除
-              await deleteVideoByFilePath(video.filePath);
-              console.log(`Deleted video: ${video.filePath}`);
-
-              // Refactor: 責務が違うけど面倒なのでここに書く 
-              await cleanupHlsFiles(video.fileName.replace(/\.[^/.]+$/, ''));
-              
-            } catch (deleteError) {
-              console.error(`Failed to delete video ${video.filePath}:`, deleteError);
-            }
-          }
-          console.log(`syncVideosWithDatabase()の処理が完了しました`);
-        }
-
       } catch (folderError) {
         console.error(`Error processing folder ${folderPath}:`, folderError);
       }
     }
+
+    // フォルダ処理がすべて終了した後に動画削除処理を実行
+    for (const video of existingVideos) {
+      const folderPath = path.dirname(video.filePath); // ファイルが存在するフォルダパスを取得
+      const mp4Files = await getMp4FilesFromFolderAsync(folderPath); // フォルダ内のmp4ファイル一覧を取得
+
+      // フォルダ内に存在しない動画を削除
+      if (!mp4Files.includes(video.filePath) || !folderPaths.includes(folderPath)) {
+        try {
+          // フォルダ内に存在しないファイルを削除
+          await deleteVideoByFilePath(video.filePath);
+          console.log(`Deleted video: ${video.filePath}`);
+
+          // Refactor: 責務が違うけど面倒なのでここに書く
+          await cleanupHlsFiles(video.fileName.replace(/\.[^/.]+$/, ''));
+
+        } catch (deleteError) {
+          console.error(`Failed to delete video ${video.filePath}:`, deleteError);
+        }
+      }
+    }
+
+    console.log(`syncVideosWithDatabase()の処理が完了しました`);
 
   } catch (error) {
     console.error('Error syncing videos with database:', error);
@@ -216,6 +218,7 @@ async function syncXMLCommentFilesWithDatabase(): Promise<void> {
       }
 
       // データベース内に存在し、フォルダ内に存在しないファイルを削除
+      /*
       for (const dbFile of existingXMLCommentFilesInDB) {
         const filePath = dbFile.filePath;
         if (!xmlFiles.some((file) => path.join(folderPath, file) === filePath)) {
@@ -223,13 +226,15 @@ async function syncXMLCommentFilesWithDatabase(): Promise<void> {
           console.log(`フォルダ内に存在しないファイルが削除されました: ${filePath}`);
         }
       }
+      */
     }
-    console.log('syncXMLCommentFilesWithDatabase()の処理が完了しました');
+    console.log('syncXMLCommentFilesWithDatabaseの処理は完了しました');
   } catch (error) {
     console.error('Error syncing XMLCommentFiles with database:', error);
     throw new Error('Failed to sync XMLCommentFiles with database');
   }
 }
+
 
 
 /**
