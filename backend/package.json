@@ -28,6 +28,7 @@
     "ini": "^5.0.0",
     "inquirer": "^12.1.0",
     "minimist": "^1.2.8",
+    "node-cache": "^5.1.2",
     "pm2": "^5.4.3",
     "simple-git": "^3.27.0",
     "winston": "^3.17.0",

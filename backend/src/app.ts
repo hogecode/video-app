@@ -14,11 +14,12 @@ import WatchHistoryRouter from './routers/WatchHistoryRouter';
 import {
     syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
 } from './services/FileService';
-import { getFolderPaths } from './services/ConfigService';
+import { checkHlsModeEnabled, getFolderPaths, loadHlsModeSetting } from './services/ConfigService';
 import { createHlsForVideos } from './services/VideoService';
 import { etagMiddleware } from './middleware/etagMiddleware';
 import { errorLoggerMiddleware } from './middleware/errorLoggerMiddleware';
 import { requestLoggerMiddleware } from './middleware/requestLoggerMiddleware';
+import { cacheMiddleware } from './middleware/cacheMiddleware';
 
 // Expressアプリケーションの初期化
 const app = express();
@@ -54,6 +55,10 @@ app.use(requestLoggerMiddleware);
 // console.logをwinstonでラップするミドルウェア
 app.use(errorLoggerMiddleware);
 
+// APIキャッシュミドルウェアの設定
+// Fix: 変更の実装の見直し
+app.use(cacheMiddleware);
+
 
 // 初期化処理
 // ffmpeg と ffprobe のパスを設定
@@ -74,10 +79,14 @@ setFfmpegPath();
 async function executeSyncFunctions() {
   await syncVideosAndXMLCommentFilesWithDatabase(); 
   await syncXMLWithJson(); 
-  await createHlsForVideos(); 
+  checkHlsModeEnabled() && await createHlsForVideos();
+
 }
 
 executeSyncFunctions();
+
+loadHlsModeSetting();
+console.log(checkHlsModeEnabled() ? 'HLS Mode is enabled' : 'HLS Mode is not enabled');
 
 
 // ルーターインポート
