@@ -4,6 +4,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { COMMENT_DIR } from '../constants';
+import { convertXmlToJsonAndSave, readCommentJsonFile } from './CommentFileService';
 
 /**
  * 指定されたフォルダ内の全てのXMLファイルのパスを非同期で取得する関数
@@ -44,3 +46,31 @@ export async function getMp4FilesFromFolderAsync(folderPath: string): Promise<st
   return mp4Files;
 }
 
+
+/**
+ * コメントJSONを取得、なければXMLファイルから生成する関数
+ * @param {string} videoFilePath - ビデオのファイルパス
+ * @returns {Promise<any>} コメントのJSONデータ
+ */
+export async function getCommentJson(videoFilePath: string): Promise<any> {
+  try {
+    if (!videoFilePath) return {}; // videoがない場合、空のコメントJSON
+
+    const xmlFilePath = videoFilePath.replace(/\.[^/.]+$/, '.xml');
+    const jsonFilePath = path.join(COMMENT_DIR, path.basename(xmlFilePath, '.xml') + '.json');
+
+    // JSONファイルが存在すればそのまま返す
+    if (fs.existsSync(jsonFilePath)) return readCommentJsonFile(jsonFilePath);
+
+    // XMLファイルが存在しない場合、空のコメントJSON
+    if (!fs.existsSync(xmlFilePath)) return {};
+
+    // JSONファイルが存在しない場合、XMLファイルから変換して保存
+    await convertXmlToJsonAndSave(xmlFilePath); // XMLをJSONに変換して保存
+    return readCommentJsonFile(jsonFilePath); // 作成後に読み込んで返す
+
+  } catch (error) {
+    console.error('Error in getCommentJson:', error);
+    return {}; // エラーが発生した場合、空のコメントJSONを返す
+  }
+}

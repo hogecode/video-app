@@ -44,7 +44,6 @@ const Header: React.FC = () => {
       }
     } catch (error) {
       console.error('Error refreshing files:', error);
-      alert('Error refreshing files.');
     }
   };
 

@@ -4,11 +4,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Video, XMLCommentFile } from '@prisma/client';
+import { Video } from '@prisma/client';
 
 import { COMMENT_DIR } from '../constants';
 import {
-    addXMLCommentFile, deleteXMLCommentFileByFilePath, getAllXMLCommentFiles
+    addXMLCommentFile, getAllXMLCommentFiles
 } from '../repositories/CommentRepository';
 import { addVideo, deleteVideoByFilePath, getAllVideos } from '../repositories/VideoRepository';
 import {
@@ -17,7 +17,7 @@ import {
 import { getFolderPaths } from './ConfigService';
 import { getMp4FilesFromFolderAsync } from './FileReadService';
 import {
-    cleanupHlsFiles, createHlsForVideos, createHlsStream, takeScreenshot
+    cleanupHlsFiles, takeScreenshot
 } from './VideoService';
 
 /**
