@@ -1,5 +1,5 @@
 import CenteredVideoList from 'components/CenteredVideoList';
-import CenteredVideoListWithoutImage from 'components/CenteredVideoListWithoutImage';
+import VideoListWithoutImage from 'components/VideoListWithoutImage';
 import FilterChips from 'components/FilterChips';
 import GridVideoList from 'components/GridVideoList';
 import { useVideoContext } from 'context/VideoContext';
@@ -285,7 +285,7 @@ const VideoList: React.FC = () => {
                 handleVideoClick={handleVideoClick}
               />
             ) : (
-              <CenteredVideoListWithoutImage
+              <VideoListWithoutImage
                 filteredVideos={filteredVideos}
                 handleVideoClick={handleVideoClick}
               />

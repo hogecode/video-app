@@ -9,6 +9,7 @@ import {
 // eslint-disable-next-line
 import { Box, IconButton } from '@mui/material';
 
+
 const Header: React.FC = () => {
   const navigate = useNavigate(); // useNavigateフックを使って遷移操作を行う
 
@@ -59,11 +60,11 @@ const Header: React.FC = () => {
         justifyContent: 'space-between', // 左右の要素を分ける
         alignItems: 'center',
         padding: '10px 20px',
-        backgroundColor: 'black', //'gray',
         color: 'white',
         position: 'sticky',
         top: 0,
         zIndex: 1000,
+        background: '#202020'
       }}
     >
       {/* 左側: 前へ、後ろへボタン */}

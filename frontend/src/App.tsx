@@ -52,12 +52,12 @@ const AppWithTheme: React.FC = () => {
       main: '#9c27b0', 
     },
     background: {
-      default: mode === 'dark' ? '#303030' : '#f5f5f5', // ダークモード時とライトモード時の背景色
-      paper: mode === 'dark' ? '#424242' : '#ffffff', // 紙の色（カードやダイアログの背景）
+      default: mode === 'dark' ? '#303030' : '#f5f5f5', // 背景色
+      paper: mode === 'dark' ? '#424242' : '#ffffff', // カードやダイアログの背景
     },
     text: {
-      primary: mode === 'dark' ? '#e0e0e0' : '#000000', // ダークモードとライトモードのテキスト色
-      secondary: mode === 'dark' ? '#b0b0b0' : '#757575', // 二次的なテキスト色
+      primary: mode === 'dark' ? '#e0e0e0' : '#000000', 
+      secondary: mode === 'dark' ? '#b0b0b0' : '#757575', 
     },
   },
 });

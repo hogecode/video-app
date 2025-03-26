@@ -6,12 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import { Favorite, History, Home, Menu, Settings } from '@mui/icons-material';
 import { Box, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
+import { useTheme } from 'context/ThemeContext';
+
 // サイドバー用のコンポーネント
 const Sidebar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false); // サイドバーの開閉状態
   const [hover, setHover] = useState<boolean>(false); // ホバー時の状態
 
   const navigate = useNavigate(); // useNavigateフックで遷移処理を取得
+  const { theme, toggleTheme } = useTheme();
 
   const handleItemClick = (link: string) => {
     navigate(link); // クリックされたアイテムに対応するリンクに遷移
@@ -38,11 +41,11 @@ const Sidebar: React.FC = () => {
       sx={{
         width: 60,
         flexShrink: 0,
-        backgroundColor: '#1976d2',
         '& .MuiDrawer-paper': {
           width: 60,
           boxSizing: 'border-box',
           transition: 'width 0.1s ease',
+          background: (theme?.toLowerCase() === 'dark') ? '#202020' : '#EEEEEE',
         },
         '&:hover .MuiDrawer-paper': {
           width: 200, // ホバー時に幅を広げる
@@ -55,6 +58,7 @@ const Sidebar: React.FC = () => {
           flexDirection: 'column',
           height: '100%',
           paddingTop: 2,
+          background: (theme?.toLowerCase() === 'dark') ? '#202020' : '#EEEEEE',
         }}
       >
         {/* ハンバーメニュー */}

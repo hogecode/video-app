@@ -1,107 +1,128 @@
-
 import React from 'react';
-
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import {
-    Box, Button, Card, CardContent, ImageList, ImageListItem, Typography
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Button,
+  ImageList,
+  ImageListItem,
 } from '@mui/material';
-
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Video } from '../types'; // Video 型をインポート
 import { SCREENSHOT_URL } from '../constants';
-import { Video } from '../types';
+import { useTheme } from 'context/ThemeContext';
 
 interface VideoListProps {
   filteredVideos: Video[];
   handleVideoClick: (video: Video) => void;
 }
 
-const CenteredVideoList: React.FC<VideoListProps> = ({ filteredVideos, handleVideoClick }) => {
+const CenteredVideoList: React.FC<VideoListProps> = ({
+  filteredVideos,
+  handleVideoClick,
+}) => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+    <>
       {filteredVideos.map((video) => (
-        <Card
+        <Grid
+          container
+          item
           key={video.id}
-          onClick={() => handleVideoClick(video)}
+          justifyContent="center"
           sx={{
-            cursor: 'pointer',
-            borderRadius: '16px',
-            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-            width: '90%', // 一列で表示、横幅を調整
-            // maxWidth: '600px', // 最大幅を指定
-            marginBottom: '20px', // アイテム間のスペース
-            '&:hover': {
-              transform: 'scale(1.02)',
-              boxShadow: '0px 8px 12px rgba(0, 0, 0, 0.2)',
-            },
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <CardContent>
-            <ImageList sx={{ width: '100%', height: 'auto', marginTop: '8px' }} cols={1}>
-              <ImageListItem>
-                <img
-                  src={
-                    video.screenshotFilePath
-                      ? SCREENSHOT_URL + '/' + video.fileName.replace(/\.mp4$/, '.png')
-                      : '/assets/fallback-image.svg'
-                  }
-                  alt="Screenshot"
-                  loading="lazy"
-                  crossOrigin="anonymous"
-                  style={{
-                    width: '100%', // 画像の幅を100%に設定
-                    height: 'auto',
-                    maxHeight: '180px', // 画像サイズを小さくする
-                    objectFit: 'cover', // 画像がトリミングされないように
-                  }}
-                />
-              </ImageListItem>
-            </ImageList>
-            <Typography variant="body1" sx={{ fontSize: '14px', fontWeight: 'bold' }}>
-              {video.fileName}
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
-              <Box sx={{ display: 'flex' }}>
-                <Typography variant="body2" color="textSecondary" sx={{ mr: 1 }}>
-                  {video.views + '回視聴'}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mr: 1 }}>
-                  {(video.commentCount || 0) + 'コメ'}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mr: 1 }}>
-                  {video.commentedDate
-                    ? new Date(video.commentedDate).toLocaleDateString()
-                    : '無し'}
-                </Typography>
+          <Card
+            onClick={() => handleVideoClick(video)}
+            sx={{
+              maxWidth: '600px',
+              height: '160px',
+              cursor: 'pointer',
+              borderRadius: '16px',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.02)',
+                boxShadow: '0px 8px 12px rgba(0, 0, 0, 0.2)',
+              },
+            }}
+          >
+            <CardContent
+              sx={{
+                display: 'flex',
+                alignItems: 'center', // コンテンツを縦方向でセンタリング
+                justifyContent: 'flex-start', // 左寄せ
+              }}
+            >
+              <ImageList
+                sx={{ maxWidth: '40%', height: 'auto', marginTop: '8px' }}
+                cols={1}
+              >
+                <ImageListItem>
+                  <img
+                    src={
+                      video.screenshotFilePath
+                        ? SCREENSHOT_URL +
+                          '/' +
+                          video.fileName.replace(/\.mp4$/, '.png')
+                        : '/assets/fallback-image.svg'
+                    }
+                    alt="Screenshot"
+                    loading="lazy"
+                    crossOrigin="anonymous"
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                </ImageListItem>
+              </ImageList>
+              <Box
+                sx={{
+                  marginLeft: '15px',
+                }}
+              >
+                <Typography variant="body1">{video.fileName}</Typography>
+                <Box sx={{ maxWidth: 600 }}>
+                  <Box sx={{ display: 'flex' }}>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ mr: 1 }}
+                    >
+                      {(video.commentCount || 0) + 'コメ'}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ mr: 1 }}
+                    >
+                      {video.commentedDate
+                        ? new Date(video.commentedDate).toLocaleString(
+                            'ja-JP',
+                            {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: false, // 24時間形式にする場合
+                            }
+                          )
+                        : '無し'}
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
-
-              <Box sx={{ display: 'flex', mt: 1 }}>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleVideoClick(video);
-                  }}
-                  sx={{ mr: 0.5 }}
-                >
-                  Watch Video
-                </Button>
-
-                {video.liked !== undefined && (
-                  <Typography variant="body2" color="textSecondary">
-                    {video.liked ? (
-                      <Favorite color="primary" />
-                    ) : (
-                      <FavoriteBorder color="disabled" />
-                    )}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Grid>
       ))}
-    </Box>
+    </>
   );
 };
 

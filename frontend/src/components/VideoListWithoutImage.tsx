@@ -11,7 +11,7 @@ interface VideoListProps {
   handleVideoClick: (video: Video) => void;
 }
 
-const CenteredVideoListWithoutImage: React.FC<VideoListProps> = ({ filteredVideos, handleVideoClick }) => {
+const VideoListWithoutImage: React.FC<VideoListProps> = ({ filteredVideos, handleVideoClick }) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       {filteredVideos.map((video) => (
@@ -51,6 +51,7 @@ const CenteredVideoListWithoutImage: React.FC<VideoListProps> = ({ filteredVideo
                 </Typography>
               </Box>
 
+              {/*
               <Box sx={{ display: 'flex', mt: 1 }}>
                 <Button
                   size="small"
@@ -74,6 +75,7 @@ const CenteredVideoListWithoutImage: React.FC<VideoListProps> = ({ filteredVideo
                   </Typography>
                 )}
               </Box>
+              */}
             </Box>
           </CardContent>
         </Card>
@@ -82,4 +84,4 @@ const CenteredVideoListWithoutImage: React.FC<VideoListProps> = ({ filteredVideo
   );
 };
 
-export default CenteredVideoListWithoutImage;
+export default VideoListWithoutImage;

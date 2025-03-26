@@ -63,32 +63,6 @@ const GridVideoList: React.FC<VideoListProps> = ({ filteredVideos, handleVideoCl
                       : '無し'}
                   </Typography>
                 </Box>
-
-                {/* 追加情報が別行になるように */}
-                <Box sx={{ display: 'flex' }}>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleVideoClick(video);
-                    }}
-                    sx={{ mr: 0.5 }}
-                  >
-                    Watch Video
-                  </Button>
-
-                  {/* liked が true の場合、ハートアイコンに色をつける */}
-                  {video.liked !== undefined && (
-                    <Typography variant="body2" color="textSecondary">
-                      {video.liked ? (
-                        <Favorite color="primary" />
-                      ) : (
-                        <FavoriteBorder color="disabled" />
-                      )}
-                    </Typography>
-                  )}
-                </Box>
               </Box>
             </CardContent>
           </Card>
