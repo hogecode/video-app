@@ -6,7 +6,7 @@ PC に保存してある mp4 ファイルを HLS 形式に変換し、同じフ�
 
 <img style="width: 80%;" src="docs/images/list.png" alt="一覧画面">
 <br/>
-<img style="width: 80%;" src="docs/images/video_md.png" alt="一覧画面">
+<img style="width: 80%;" src="docs/images/video_md.png" alt="ビデオ画面">
 
 ### 目次
 
@@ -86,6 +86,7 @@ PC に保存してある動画を見る場合、多くの人が PC で VLC な�
 
    このアプリは`backend`フォルダにある ini ファイルに指定した複数のフォルダ内の mp4 ファイルと、それと同じ名前のニコニコ動画の xml ファイルを読み込みます。
    <br/>
+
    iniファイルでは同じ変数を複数認識することはできないので、複数のフォルダを読み込みたい場合は、`paths1`や`paths2`のように`paths`の後に適当な文字を追加してください。
 
    ```ini
@@ -111,13 +112,14 @@ PC に保存してある動画を見る場合、多くの人が PC で VLC な�
     ```
 
 11. ブラウザでアクセス
+
     ブラウザで `http://(IP アドレス):3002` にアクセスすることでアプリが使えます。
 
 #### それ以降
 
 `start_app.bat`をダブルクリックして起動できます。DB履歴を初期化したい場合は`update_db.bat`をダブルクリックします。
 
-##### Tailescale の導入
+#### Tailescale の導入
 
 このアプリを外出先から視聴するには、[Tailescale](https://tailscale.com/)などの VPN ソフトを使う必要があります。Tailescale から与えられた IP アドレスを使ってアクセスしてください。
 
@@ -179,27 +181,26 @@ PC に保存してある動画を見る場合、多くの人が PC で VLC な�
 > コメントファイルがない動画もコメントテーブルは表示されません。
 
 </br>
-
-![設定画面](docs/images/video_xs.png)
+<img style="width: 80%;" src="docs/images/video_xs.png" alt="スマホでの視聴画面">
 
 また、下にあるタブでは動画メタデータ、コメントテーブル、コメント遅延秒数切替、コメント検索、プレイリストのいづれかを選択して表示できます。
 
 デフォルトでは動画が終了すると次の動画が自動で再生されますが、プレイリスト内の動画をクリックすることでその動画を再生できます。
-![設定画面](docs/images/video_tab_comment_delay.png)
-![設定画面](docs/images/video_tab_comment_search.png)
-![設定画面](docs/images/video_tab_playlist.png)
+<img style="width: 80%;" src="docs/images/video_tab_comment_delay.png" alt="タブのコメント遅延画面">
+<img style="width: 80%;" src="docs/images/video_tab_comment_search.png" alt="タブの検索画面">
+<img style="width: 80%;" src="docs/images/video_tab_playlist.png" alt="タブのプレイリスト画面">
 
 **設定画面**
 
 - コメント NG 機能(通常の単語と正規表現の両方に対応)
 - コメントのフォント切り替え
 - 設定を json 形式でインポート、エキスポート、リセット
-
-![設定画面](docs/images/settings.png)
+<img style="width: 80%;" src="docs/images/settings.png" alt="設定画面">
 
 ### FAQ
 
 #### 動画追加時に PC が長時間重くなる
+
 ffmpeg を使って mp4 から HLS ファイルを生成するため、PC のスペックによっては CPU 使用率が 100%近くになってしまう可能性があります。
 
 > [!NOTE]  
