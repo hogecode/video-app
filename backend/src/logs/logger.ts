@@ -1,6 +1,4 @@
 
-// src/logs/logger.ts
-
 import path from 'path';
 import winston from 'winston';
 

@@ -110,7 +110,7 @@ export async function takeScreenshot(videoFilePath: string): Promise<string> {
  * @param videoID - 入力動画ファイルのパス
  * @returns {Promise<string>} - 作成された.m3u8ファイルのパス
  */
-export async function createHlsStream(videoFilePath: string): Promise<string> {
+export async function createHlsStreamFromFilePath(videoFilePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     // 動画のファイル名からフォルダ名を生成
     const videoFileName = path.basename(
@@ -120,9 +120,6 @@ export async function createHlsStream(videoFilePath: string): Promise<string> {
 
     // 動画ごとの専用フォルダを作成
     const outputDir = path.join(STREAM_DIR, videoFileName);
-
-    // もし既に同名のフォルダが存在する場合、クリーンアップを行う
-    // cleanupHlsFiles(); // クリーンアップ関数を呼び出す
 
     // 出力ディレクトリが存在しない場合は作成
     if (!fs.existsSync(outputDir)) {
@@ -150,34 +147,17 @@ export async function createHlsStream(videoFilePath: string): Promise<string> {
         resolve(outputFilePath); // m3u8ファイルのパスを返す
       })
       .on('error', (err) => {
-        console.error('Error creating HLS stream:', err);
-        reject(new Error('Failed to create HLS stream'));
+        // エラーを伝搬させる必要はない
+        console.error('Error creating HLS stream:', err);  
       })
       .run();
   });
 }
 
-/**
- * 指定したディレクトリ内に存在するフォルダがあれば、それらを削除する関数
- * Refactor: 非同期処理に対応させる
- * @deprecated m3u8ファイルは残すべき
- */
-function cleanupAllHlsFiles(): void {
-  const files = fs.readdirSync(STREAM_DIR); // ディレクトリ内のすべてのファイルとフォルダを取得
-
-  files.forEach((file) => {
-    const fullPath = path.join(STREAM_DIR, file);
-
-    if (fs.statSync(fullPath).isDirectory()) {
-      // フォルダが見つかった場合
-      console.log(`Deleting folder: ${fullPath}`);
-      fs.rmSync(fullPath, { recursive: true, force: true }); // フォルダを削除（再帰的に）
-    }
-  });
-}
 
 /**
  * 拡張子を除いたファイル名を受け取り、そのディレクトリ内のファイルを削除する関数
+ * config.iniでフォルダを監視しなくなった場合やmp4ファイルが消された時に呼び出す
  */
 export async function cleanupHlsFiles(fileName: string): Promise<void> {
   try {
@@ -201,6 +181,7 @@ export async function cleanupHlsFiles(fileName: string): Promise<void> {
     console.error('Error deleting folder:', err);
   }
 }
+
 
 /**
  * データベースから動画を取得し、対応する .m3u8 ファイルが存在しない場合にHLSを作成する関数
@@ -234,7 +215,7 @@ export async function createHlsForVideos(): Promise<void> {
         console.log(`HLSストリームを作成しています: ${video.filePath}`);
 
         // .m3u8ファイルが存在しない場合、HLSを作成
-        const hlsStream = await createHlsStream(video.filePath);
+        const hlsStream = await createHlsStreamFromFilePath(video.filePath);
         console.log(
           `全ての動画のHLSストリームの作成が完了しました: ${hlsStream}`
         );
@@ -286,7 +267,7 @@ export async function createHlsForVideoById(videoId: number): Promise<void> {
       console.log(`HLSストリームを作成しています: ${video.filePath}`);
 
       // .m3u8ファイルが存在しない場合、HLSを作成
-      const hlsStream = await createHlsStream(video.filePath);
+      const hlsStream = await createHlsStreamFromFilePath(video.filePath);
       console.log(`HLSストリームの作成が完了しました: ${hlsStream}`);
     } catch (error) {
       console.error(`動画 ${video.filePath} のHLS作成に失敗しました:`, error);

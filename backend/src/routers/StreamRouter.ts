@@ -9,7 +9,7 @@ import { convertXmlToJson } from '../services/CommentFileService';
 import {
     mergeVideosWithComments, syncVideosAndXMLCommentFilesWithDatabase
 } from '../services/FileService';
-import { createHlsForVideoById, createHlsStream } from '../services/VideoService';
+import { createHlsForVideoById, createHlsStreamFromFilePath } from '../services/VideoService';
 import { checkHlsModeEnabled } from '../services/ConfigService';
 
 // Memo: prefixは/api/stream

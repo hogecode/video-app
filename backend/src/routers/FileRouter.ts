@@ -15,7 +15,7 @@ import {
 import {
     mergeVideosWithComments, syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
 } from '../services/FileService';
-import { createHlsForVideos, createHlsStream } from '../services/VideoService';
+import { createHlsForVideos, createHlsStreamFromFilePath } from '../services/VideoService';
 import { checkHlsModeEnabled } from '../services/ConfigService';
 import { getCommentJson } from '../services/FileReadService';
 
