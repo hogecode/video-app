@@ -19,18 +19,18 @@ import { Comment } from '../types';
 import TemplatePage from './TemplatePage';
 import { CommentRounded, ListAlt, Search, Timer, VideoLibrary } from '@mui/icons-material';
 import { useHlsMode } from 'context/HlsModeContext';
+import { useEventListener } from 'usehooks-ts';
 
 // タブのコンポーネントを遅延読み込み
 const VideoMetaData = lazy(() => import('components/VideoMetaData'));
 const VideoComments = lazy(() => import('components/VideoComments'));
 
 const Video: React.FC = () => {
-
   const { videoId } = useParams<{ videoId: string }>();
   const { selectedVideo } = useVideoContext();
   const { settings } = useSettings();
   const { hlsMode } = useHlsMode();
-  
+
   const [videoSource, setVideoSource] = useState<string>('');
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -41,7 +41,10 @@ const Video: React.FC = () => {
   const [fileResponse, setFileResponse] = useState(null);
 
   const videoRef = useRef<any>(null);
-  const [selectedTab, setSelectedTab] = useLocalStorage<string>('selectedTab', 'Meta Data');
+  const [selectedTab, setSelectedTab] = useLocalStorage<string>(
+    'selectedTab',
+    'Meta Data'
+  );
 
   // 動画の高さを更新する関数
   const updateHeight = () => {
@@ -49,24 +52,18 @@ const Video: React.FC = () => {
       const height = videoRef.current.getVideoHeight();
       setVideoHeight(height);
     }
+  }; 
+  
+  const handleResize = () => {
+    updateHeight();
   };
+
+  // ウィンドウのリサイズ時にも高さを更新
+  useEventListener('resize', handleResize);
 
   useLayoutEffect(() => {
     // 最初に動画の高さを取得
     updateHeight();
-
-    // ウィンドウのリサイズ時にも高さを更新
-    const handleResize = () => {
-      updateHeight();
-    };
-
-    // リサイズイベントをリスン
-    window.addEventListener('resize', handleResize);
-
-    // クリーンアップ
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   }, [videoRef.current]); // videoRef.current を依存配列に追加
 
   const handleCommentDelay = (newDelay: number) => {
@@ -148,34 +145,34 @@ const Video: React.FC = () => {
     fetchData();
   }, [videoId]);
 
-
   // 2つ目のuseEffect(hlsSourceの更新）
   // 一個目のuseEffectが完了してから処理を行いたいため
   useEffect(() => {
-    if (!isDataFetched) return; 
+    if (!isDataFetched) return;
 
     console.log('VideoContextのselectedVideo:', selectedVideo);
-    
+
     // HLSモードが無効な場合、MP4のソースを設定
     if (!hlsMode) {
       console.log('fileResponse: ', fileResponse);
-      const folder = fileResponse?.video.folderPath.split(/[/\\]/).pop();// 最後の部分（フォルダ名）を取得
+      const folder = fileResponse?.video.folderPath.split(/[/\\]/).pop(); // 最後の部分（フォルダ名）を取得
       const encodedFolderName = encodeURIComponent(folder); // フォルダ名をエンコード
       const videoFileName = selectedVideo?.fileName;
-      
+
       // MP4動画のソースURLを設定
       setVideoSource(`${MP4_STREAM_URL}/${encodedFolderName}/${videoFileName}`);
 
       // HLSモードの場合の処理
     } else {
       const videoFileName = selectedVideo?.fileName.replace(/\.mp4$/, ''); // .mp4を取り除く
-      setVideoSource(`${HLS_STREAM_URL}/${videoFileName}/${videoFileName}.m3u8`); // HLSのソースを設定
+      setVideoSource(
+        `${HLS_STREAM_URL}/${videoFileName}/${videoFileName}.m3u8`
+      ); // HLSのソースを設定
     }
-      
-      console.log('videoSource: ', videoSource);
-      setLoading(false);
-  }, [isDataFetched, videoSource, videoId, selectedVideo]);  // isDataFetchedを依存関係に追加
 
+    console.log('videoSource: ', videoSource);
+    setLoading(false);
+  }, [isDataFetched, videoSource, videoId, selectedVideo]); // isDataFetchedを依存関係に追加
 
   // ローディング中に表示するスピナー
   if (loading) {
@@ -206,7 +203,11 @@ const Video: React.FC = () => {
       >
         {/* VideoPlayerコンポーネント */}
         <Box sx={{ maxWidth: '850px', flexGrow: 1 }}>
-          <VideoPlayer ref={videoRef} source={videoSource} onTimeUpdate={handleTimeUpdate} />
+          <VideoPlayer
+            ref={videoRef}
+            source={videoSource}
+            onTimeUpdate={handleTimeUpdate}
+          />
         </Box>
 
         {/* VideoComments */}
@@ -226,13 +227,13 @@ const Video: React.FC = () => {
           </Box>
         )}
       </Box>
-      <Box sx={{ width: '100%' }}>
+      <Box>
         {/* タブ */}
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
           aria-label="Video player tabs"
-          centered
+          sx={{ width: '100%', display: 'flex', justifyContent: 'start' }}
         >
           <Tab value="Meta Data" icon={<ListAlt />} iconPosition="start" />
           <Tab
