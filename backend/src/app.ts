@@ -16,12 +16,18 @@ import {
 } from './services/FileService';
 import { getFolderPaths } from './services/ConfigService';
 import { createHlsForVideos } from './services/VideoService';
+import { etagMiddleware } from './middleware/etagMiddleware';
+import { errorLoggerMiddleware } from './middleware/errorLoggerMiddleware';
+import { requestLoggerMiddleware } from './middleware/requestLoggerMiddleware';
 
 // Expressアプリケーションの初期化
 const app = express();
 
 const port = 3002;
 
+
+// 外部ライブラリのミドルウェアを設定
+// CORS関連の設定
 // Memo: 自己ホストアプリだしセキュリティの心配はあまりない
 app.use(cors({
   origin: '*', // 全てのオリジンを許可
@@ -37,54 +43,21 @@ app.options('*', cors());
 // Memo: gzipはJSONには有効だが、バイナリには効果が薄い
 app.use(compression());
 
-// ミドルウェアを使ってレスポンスをキャプチャし、ETagを設定
-app.use((req: Request, res: Response, next) => {
-  // 元のsendメソッドを保持
-  const originalSend = res.send;
 
-  // sendメソッドをオーバーライド
-  res.send = function (body: any): Response<any, Record<string, any>> {
-    if (body) {
-      // ETagを生成し、レスポンスヘッダーに設定
-      res.setHeader('ETag', etag(JSON.stringify(body)));
-    }
-    // 元のsendメソッドを呼び出し、レスポンスを送信
-    return originalSend.call(this, body);
-  };
+// 自作のミドルウェアを設定
+// ETagミドルウェア
+app.use(etagMiddleware);
 
-  next();
-});
+// ロギングミドルウェア
+app.use(requestLoggerMiddleware);
 
+// console.logをwinstonでラップするミドルウェア
+app.use(errorLoggerMiddleware);
 
-// ミドルウェア定義
-// Refactor: ミドルウェアフォルダへ移動
-
-// ログ用ミドルウェア（リクエストのログを表示）
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`${req.method} リクエスト ${req.url}`);
-  next(); // 次のハンドラーに処理を渡す
-});
-
-// console.errorをwinstonで上書きしてファイル出力するミドルウェア
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const originalConsoleError = console.error;
-  console.error = (...args: any[]) => {
-    // argsを文字列に変換してwinstonで記録
-    logger.error(
-      args
-        .map((arg) => (typeof arg === 'object' ? JSON.stringify(arg) : arg))
-        .join(' ')
-    );
-
-    // 元のconsole.errorも呼び出す
-    originalConsoleError.apply(console, args);
-  };
-
-  next();
-});
 
 // 初期化処理
 // ffmpeg と ffprobe のパスを設定
+// Memo: これを設定しないとffmpegとffprobeが初期化されない
 const setFfmpegPath = () => {
   if (!ffmpegPath) {
     throw new Error('ffmpeg-staticが見つかりません');
@@ -93,23 +66,25 @@ const setFfmpegPath = () => {
   ffmpeg.setFfprobePath(ffmpegPath);
   console.log('ffmpegのパスを設定しました');
 };
+
 setFfmpegPath();
 
 // フォルダとDBとの同期を実行
 // Memo: トップレベルawaitは許可されないので関数を作成
 async function executeSyncFunctions() {
-  await syncVideosAndXMLCommentFilesWithDatabase(); // 最初の非同期関数が完了するまで待つ
-  await syncXMLWithJson(); // 最後の非同期関数が完了するまで待つ
-  await createHlsForVideos(); // 次の非同期関数が完了するまで待つ
+  await syncVideosAndXMLCommentFilesWithDatabase(); 
+  await syncXMLWithJson(); 
+  await createHlsForVideos(); 
 }
 
-// 実行
 executeSyncFunctions();
+
 
 // ルーターインポート
 app.use('/api/files', FileRouter);
 app.use('/api/history', WatchHistoryRouter);
 app.use('/api/streams', StreamRouter);
+
 
 // 静的ファイル配信
 // /streamsの形でHLSを配信する
@@ -117,6 +92,7 @@ app.use('/api/streams', StreamRouter);
 app.use('/assets', express.static(STATIC_DIR, { maxAge: '1d' }));
 
 // getFolderPaths() を使ってすべてのパスを取得
+// mp4での配信のために設定
 // Refactor: これではまだ特殊文字(#)などに対応できない
 const folderPaths = getFolderPaths();
 
@@ -132,7 +108,6 @@ folderPaths.forEach((folderPath) => {
 // reactのビルドファイルを配信する
 app.use('/static', express.static(path.join(BUILT_HTML_DIR, 'static')));
 
-// service-worker.js エンドポイントを設定
 app.get('/service-worker.js', (req, res) => {
   const serviceWorkerPath = path.join(BUILT_HTML_DIR, 'service-worker.js');
   res.sendFile(serviceWorkerPath);
@@ -147,6 +122,7 @@ app.get('/manifest.json', (req, res) => {
 app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(BUILT_HTML_DIR, 'index.html'));
 });
+
 
 // サーバーの起動
 app.listen(port, () => {
