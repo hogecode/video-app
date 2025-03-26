@@ -1,9 +1,10 @@
-# 自己ホスト型アプリなので.envは入れなくていい
-
 node_modules
 dist
 
 dev.db
-migrations/*_init/
-logs/*.log
+dev.db-journal
+migration_lock.toml
+src/prisma/migrations/*_init/
+
+logs/logs/*.log
 

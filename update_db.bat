@@ -1,4 +1,4 @@
-@echo off
+@echo on
 
 :: アプリが起動していれば停止する
 pm2 list | findstr /C:"video_app" > nul
