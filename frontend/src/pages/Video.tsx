@@ -1,8 +1,3 @@
-//ToDo: hls機能、コメント表示は後ででいい
-//ToDo: 動画の時間の変数をここで管理
-//Refactor: componentsに後で分ける
-//Fix: selectedVideoがundefinedになる
-
 import 'plyr/dist/plyr.css'; // Plyr のスタイルもインポート
 import './Video.css';
 
@@ -19,33 +14,35 @@ import { useLocalStorage } from 'react-use';
 
 import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
 
-import { STREAM_URL } from '../constants';
+import { HLS_STREAM_URL, MP4_STREAM_URL } from '../constants';
 import { Comment } from '../types';
 import TemplatePage from './TemplatePage';
 import { CommentRounded, ListAlt, Search, Timer, VideoLibrary } from '@mui/icons-material';
-
-// import VideoComments from 'components/VideoComments';
+import { useHlsMode } from 'context/HlsModeContext';
 
 // タブのコンポーネントを遅延読み込み
 const VideoMetaData = lazy(() => import('components/VideoMetaData'));
 const VideoComments = lazy(() => import('components/VideoComments'));
 
 const Video: React.FC = () => {
-  // URLパラメータから動画のURLを取得
-  const { videoId } = useParams<{ videoId: string }>(); // 動的パラメータで動画のIDを取得
+
+  const { videoId } = useParams<{ videoId: string }>();
   const { selectedVideo } = useVideoContext();
-  const [hlsSource, setHlsSource] = useState<string>('');
-  const [isDataFetched, setIsDataFetched] = useState(false); // データがフェッチされたかどうかを管理
+  const { settings } = useSettings();
+  const { hlsMode } = useHlsMode();
+  
+  const [videoSource, setVideoSource] = useState<string>('');
+  const [isDataFetched, setIsDataFetched] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [selectedTab, setSelectedTab] = useLocalStorage<string>(
-    'selectedTab',
-    'Meta Data'
-  );
   const [loading, setLoading] = useState<boolean>(true);
-  const [commentDelay, setCommentDelay] = useState<number>(0); // コメント遅延時間
-  const { settings } = useSettings();
-  const [videoHeight, setVideoHeight] = useState(250);
+  const [commentDelay, setCommentDelay] = useState<number>(0); //コメント遅延秒数
+  const [videoHeight, setVideoHeight] = useState(250); // videoタグの高さを取得
+  
+  const [selectedTab, setSelectedTab] = useLocalStorage<string>('selectedTab', 'Meta Data');
+
+  let fileResponse = null;
+  
 
   const handleCommentDelay = (newDelay: number) => {
     setCommentDelay(newDelay);
@@ -61,6 +58,7 @@ const Video: React.FC = () => {
     setCurrentTime(time); // 再生時間を更新
   };
 
+  // NGワードを除去する関数
   const filterComments = (
     comments: Comment[],
     ngPatterns: string[]
@@ -94,10 +92,10 @@ const Video: React.FC = () => {
         try {
           // /api/files/:id にリクエスト
           setLoading(true);
-          const filesResponse = await UseFetch<any>(`/api/files/${videoId}`);
+          fileResponse = await UseFetch<any>(`/api/files/${videoId}`);
           // console.log('Files API Response:', filesResponse);
 
-          const allComments: Comment[] = filesResponse.CommentJson?.chats || []; // 取得したコメント
+          const allComments: Comment[] = fileResponse.CommentJson?.chats || []; // 取得したコメント
           const filteredComments = filterComments(
             allComments,
             settings.ngPatterns
@@ -121,22 +119,35 @@ const Video: React.FC = () => {
     fetchData();
   }, [videoId]);
 
-  // 2つ目のuseEffect（hlsSourceの更新）
+  // 2つ目のuseEffect(hlsSourceの更新）
+  // 一個目のuseEffectが完了してから処理を行いたいため
   useEffect(() => {
-    if (isDataFetched) {
-      // videoIdが変更されたときにhlsSourceを更新
-      //Fix: undefinedになる
-      console.log('VideoContextのselectedVideo:' + selectedVideo);
+    if (!isDataFetched) return; 
+
+    console.log('VideoContextのselectedVideo:', selectedVideo);
+    // HLSモードが無効な場合、MP4のソースを設定
+    if (!hlsMode) {
+      const folder = fileResponse.video.folderPath.split('/').pop(); // 最後の部分（フォルダ名）を取得
+      const encodedFolderName = encodeURIComponent(folder); // フォルダ名をエンコード
+      const videoFileName = selectedVideo?.fileName;
+      
+      // MP4動画のソースURLを設定
+      setVideoSource(`${MP4_STREAM_URL}/${encodedFolderName}/${videoFileName}`);
+
+      // HLSモードの場合の処理
+    } else {
       const videoFileName = selectedVideo?.fileName.replace(/\.mp4$/, ''); // .mp4を取り除く
-      setHlsSource(`${STREAM_URL}/${videoFileName}/${videoFileName}.m3u8`); // hlsSourceを設定
-      console.log(hlsSource);
-      setLoading(false);
+      setVideoSource(`${HLS_STREAM_URL}/${videoFileName}/${videoFileName}.m3u8`); // HLSのソースを設定
+
     }
-  }, [isDataFetched, videoId, selectedVideo, hlsSource]); // isDataFetchedを依存関係に追加
+
+      console.log(videoSource);
+      setLoading(false);
+  }, [isDataFetched, hlsMode, videoId, selectedVideo]);  // isDataFetchedを依存関係に追加
+
 
   // 初期表示時とリサイズ時に高さを調整する
   // Memo: ビデオの高さに合わせてコメントの高さを調整するため
-  // flexが苦手なのでかなり強引な処理
   // Refactor: 重ければdebounceも検討
   useLayoutEffect(() => {
     const updateVideoHeight = () => {
@@ -211,7 +222,7 @@ const Video: React.FC = () => {
       >
         {/* VideoPlayerコンポーネント */}
         <Box sx={{ maxWidth: '850px', flexGrow: 1 }}>
-          <VideoPlayer source={hlsSource} onTimeUpdate={handleTimeUpdate} />
+          <VideoPlayer source={videoSource} onTimeUpdate={handleTimeUpdate} />
         </Box>
 
         {/* VideoComments */}

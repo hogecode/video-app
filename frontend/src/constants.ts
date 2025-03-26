@@ -5,6 +5,8 @@ export const SERVER_URL =
 
 export const SCREENSHOT_URL = SERVER_URL + '/assets/screenshots'
 
-export const STREAM_URL = SERVER_URL + '/assets/stream'
+export const MP4_STREAM_URL = SERVER_URL + '/folders'
+
+export const HLS_STREAM_URL = SERVER_URL + '/assets/stream'
 
 export const SCROLL_SPEED = 1.5;

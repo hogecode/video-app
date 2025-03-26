@@ -13,6 +13,7 @@ import { ThemeProvider, useTheme } from './context/ThemeContext'; // ThemeContex
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Video from './pages/Video';
+import { HlsModeProvider } from 'context/HlsModeContext';
 
 // Fix: font faceが読み込めないので一時的にコメントアウト
 // import './styles/index.scss';
@@ -22,12 +23,16 @@ import Video from './pages/Video';
 // App コンポーネント
 const App: React.FC = () => {
   return (
-    <ThemeProvider> {/* ThemeContext を提供 */}
-     <VideoProvider>
-      <SettingsProvider>
-      <AppWithTheme />
-      </SettingsProvider>
-      </VideoProvider>
+    <ThemeProvider>
+      {' '}
+      {/* ThemeContext を提供 */}
+      <HlsModeProvider>
+        <VideoProvider>
+          <SettingsProvider>
+            <AppWithTheme />
+          </SettingsProvider>
+        </VideoProvider>
+      </HlsModeProvider>
     </ThemeProvider>
   );
 };

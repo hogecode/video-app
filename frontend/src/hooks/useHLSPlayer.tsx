@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useDoubleTapSeek from './useDoubleTapSeek';
+import { useHlsMode } from 'context/HlsModeContext';
 
 interface VideoPlayerProps {
   source: string; // sourceをプロップスとして受け取る
@@ -16,13 +17,31 @@ interface VideoPlayerProps {
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null); // Hlsインスタンスを保持するためのref
+  
   const { selectedVideo, setSelectedVideo, filteredVideos } = useVideoContext();
   const navigate = useNavigate();
-
+  const { hlsMode } = useHlsMode();
   useDoubleTapSeek(videoRef);
 
+  // Plyrのオプション
+  const plyrOptions = {
+    muted: false, // 初期状態でミュートしない
+    keyboard: { focused: true, global: true }, // キーボード操作を有効にする
+    // 他のオプションを追加
+    // controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+    // loop: { active: true }, // ループ再生
+  };
+
+  // Hls.jsとPlyrのセットアップ
+  // Memo: sourceを依存配列にする必要はあるのか
   useEffect(() => {
     if (!videoRef.current) return;
+
+    // mp4モードの場合に早期リターン
+    if (!hlsMode) {
+      const player = new Plyr(videoRef.current, plyrOptions);
+      return;
+    }
 
     if (Hls.isSupported()) {
       const hls = new Hls();
@@ -31,34 +50,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
 
       hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
         // Plyrの初期化
-        const player = new Plyr(videoRef.current, {
-          /*
-          controls: [
-            'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip','fullscreen',  'stop'
-          ],
-          
-          loop: { active: true }, // ループ再生
-          */
-          // autoplay: true, // 自動再生
-          muted: false, // 初期状態でミュートしない
-          keyboard: { focused: true, global: true }, // キーボード操作を有効にする
-        });
+        const player = new Plyr(videoRef.current, plyrOptions);
       });
 
       hls.attachMedia(videoRef.current);
+
     } else {
-      // Hls.jsがサポートされていない場合は、デフォルトオプションでPlyrを初期化
-      const player = new Plyr(videoRef.current, {
-        /*
-        controls: [
-          'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip','fullscreen',  'stop'
-        ],
-        loop: { active: true }, // ループ再生
-        autoplay: true,     // 自動再生
-        */
-        muted: false, // 初期状態でミュートしない
-        keyboard: { focused: true, global: true }, // キーボード操作を有効にする
-      });
+      // Hls.jsがサポートされていない場合
+      const player = new Plyr(videoRef.current, plyrOptions);
     }
 
     // クリーンアップ
@@ -67,37 +66,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
         hlsRef.current.destroy();
       }
     };
-  }, [source]); // sourceが変わるたびに再初期化されるように依存配列に追加
+  }, [source]); 
 
-  useEffect(() => {
-    const storedTime = localStorage.getItem(`videoTime_${source}`);
-    if (videoRef.current) {
-      videoRef.current.currentTime = storedTime ? parseFloat(storedTime) : 0;
-    }
-  }, [source]);
-
+  // 再生時間が変わった時に親コンポーネントに通知する関数
   const handleTimeUpdate = () => {
     if (videoRef.current) {
-      onTimeUpdate(videoRef.current.currentTime); // 再生時間が変わった時に親コンポーネントに通知
+      onTimeUpdate(videoRef.current.currentTime); 
     }
   };
 
-  useEffect(() => {
-    const storedTime = localStorage.getItem(`videoTime_${source}`);
-    if (videoRef.current) {
-      videoRef.current.currentTime = storedTime ? parseFloat(storedTime) : 0;
-    }
-    return () => {
-      if (videoRef.current) {
-        localStorage.setItem(
-          `videoTime_${source}`,
-          videoRef.current.currentTime.toString()
-        );
-      }
-    };
-  }, []);
-
-  // 動画終了時に次の動画を設定
+  // 動画終了時に次の動画を設定する関数
   const handleVideoEnd = () => {
     if (!selectedVideo) return;
 
