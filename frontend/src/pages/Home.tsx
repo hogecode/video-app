@@ -1,6 +1,3 @@
-// ToDo: fetchしてアイコンかリスト表示のみ切り替える
-// ToDo: サムネ表示、UI見直す
-
 import CenteredVideoList from 'components/CenteredVideoList';
 import CenteredVideoListWithoutImage from 'components/CenteredVideoListWithoutImage';
 import FilterChips from 'components/FilterChips';
@@ -20,8 +17,12 @@ import { Box, Button, Chip, CircularProgress, Grid, IconButton, Typography } fro
 
 import { SCROLL_SPEED } from '../constants';
 import TemplatePage from './TemplatePage';
+import UseFetch from 'hooks/UseFetch';
+import { useHlsMode } from 'context/HlsModeContext';
 
 const VideoList: React.FC = () => {
+  const { setHlsMode } = useHlsMode(); // HLSモード設定を最初に
+
   const {
     videos,
     filteredVideos,
@@ -30,16 +31,13 @@ const VideoList: React.FC = () => {
     sortVideos,
     filterVideosByYear,
     selectedYear,
-  } = useVideoContext();
-
-  const [loading, setLoading] = useState<boolean>(true);
+  } = useVideoContext(); // Video関連の情報をまとめて取得
+  
+  const [loading, setLoading] = useState<boolean>(true); // ローディング状態
   const [viewType, setViewType] = useLocalStorage<
     'grid' | 'centered-image' | 'centered-no-image'
-  >('viewType', 'grid');
-
-  const navigate = useNavigate();
-  useScrollSpeed(SCROLL_SPEED);
-
+  >('viewType', 'grid'); // ビュータイプをローカルストレージに保存
+  
   const [sortOrder, setSortOrder] = useState<{
     activeKey: 'fileName' | 'commentedDate'; // 現在アクティブなソート基準
     fileName: 'asc' | 'desc'; // fileName の並べ替え順
@@ -48,17 +46,40 @@ const VideoList: React.FC = () => {
     activeKey: 'fileName', // 初期状態では fileName がアクティブ
     fileName: 'asc',
     commentedDate: 'asc',
-  });
+  }); // ソート順の管理
+  
+  const navigate = useNavigate();
+  useScrollSpeed(SCROLL_SPEED); // スクロール速度の設定
+  
 
+  // fetchVideos を呼び出して動画を取得
   const loadVideos = useCallback(async () => {
     setLoading(true);
-    await fetchVideos(); // fetchVideos を呼び出して動画を取得
+    await fetchVideos(); 
     setLoading(false);
   }, [fetchVideos]);
 
   useEffect(() => {
     loadVideos();
   }, [loadVideos]);
+
+
+  // /api/config から設定情報を取得してコンテキストに設定
+  useEffect(() => {
+    const fetchHlsMode = async () => {
+      try {
+        const response = await UseFetch<any>('/api/config');
+
+        if (response && response.isHlsModeEnabled !== undefined) {
+          setHlsMode(response.isHlsModeEnabled);
+        }
+      } catch (error) {
+        console.error('Error fetching HLS mode:', error);
+      }
+    };
+
+    fetchHlsMode();
+  }, []);
 
   const handleVideoClick = (video: Video) => {
     // クリックした動画を selectedVideo にセット
@@ -88,6 +109,8 @@ const VideoList: React.FC = () => {
     navigate(`/videos/${randomVideo.id}`);
   };
 
+
+  // 取得した動画から動画が生成された年のセットを取得
   const uniqueYears = Array.from(
     new Set(
       videos
@@ -102,6 +125,8 @@ const VideoList: React.FC = () => {
     )
   ).sort((a, b) => a - b);
 
+
+  // 異なるソート順で動画を並び替える関数
   const handleSort = (key: 'fileName' | 'commentedDate') => {
     const newOrder = sortOrder[key] === 'asc' ? 'desc' : 'asc'; // 並べ替え順を反転
     setSortOrder((prev) => ({

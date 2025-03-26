@@ -11,6 +11,7 @@ import logger from './logs/logger';
 import FileRouter from './routers/FileRouter';
 import StreamRouter from './routers/StreamRouter';
 import WatchHistoryRouter from './routers/WatchHistoryRouter';
+import ConfigRouter from './routers/ConfigRouter';
 import {
     syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
 } from './services/FileService';
@@ -93,6 +94,7 @@ console.log(checkHlsModeEnabled() ? 'HLS Mode is enabled' : 'HLS Mode is not ena
 app.use('/api/files', FileRouter);
 app.use('/api/history', WatchHistoryRouter);
 app.use('/api/streams', StreamRouter);
+app.use('/api/config', ConfigRouter);
 
 
 // 静的ファイル配信
