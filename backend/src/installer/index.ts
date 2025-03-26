@@ -12,7 +12,7 @@ import path from 'path';
 import simpleGit, { SimpleGit } from 'simple-git';
 import { promisify } from 'util';
 
-import { writeFolderPathsToConfig } from '../services/FileService';
+import { writeFolderPathsToConfig } from '../services/ConfigService';
 
 // 定数設定
 const REPO_URL = 'https://github.com/shun103100000/video_app.git'; // GitHubのリポジトリURL

@@ -6,5 +6,5 @@ dev.db-journal
 migration_lock.toml
 src/prisma/migrations/*_init/
 
-logs/logs/*.log
+src/logs/logs/*.log
 

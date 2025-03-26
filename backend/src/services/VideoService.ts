@@ -1,5 +1,5 @@
 /**
- * ffmpeg関連の処理を記述するファイル 
+ * ffmpeg関連の処理を記述するファイル
  * サムネ生成、HLS配信など
  */
 
@@ -57,12 +57,18 @@ export async function takeScreenshot(videoFilePath: string): Promise<string> {
     // 出力先ディレクトリが存在しない場合は作成
     if (!fs.existsSync(SCREENSHOT_DIR)) {
       fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-      console.log('スクリーンショットの保存先ディレクトリを作成しました', SCREENSHOT_DIR);
+      console.log(
+        'スクリーンショットの保存先ディレクトリを作成しました',
+        SCREENSHOT_DIR
+      );
     }
 
     // 動画ファイル名からスクリーンショットのファイル名を決定
-    const videoFileName = path.basename(videoFilePath, path.extname(videoFilePath));
-    
+    const videoFileName = path.basename(
+      videoFilePath,
+      path.extname(videoFilePath)
+    );
+
     // 動画の長さを取得
     /*
      const duration = await getVideoDuration(videoFilePath);
@@ -74,22 +80,22 @@ export async function takeScreenshot(videoFilePath: string): Promise<string> {
     }
     const screenshotFileName = `${videoFileName}-${timestamp.replace(":", "-")}.png`;
     */
-   
+
     const screenshotFileName = `${videoFileName}.png`;
     const screenshotPath = path.join(SCREENSHOT_DIR, screenshotFileName);
     console.log('スクリーンショットを', screenshotPath, 'に保存します');
 
     // FFmpegコマンドでスクリーンショットを取得
     ffmpeg(videoFilePath)
-    .screenshots({
-      timestamps: ['15'],  // Refactor: 後で20%などに固定したい
-      filename: screenshotFileName,  // スクリーンショットのファイル名
-      folder: SCREENSHOT_DIR,  // 保存先フォルダ
-      size: '1280x720'  // 画像サイズ（任意で変更可能）
-    })
+      .screenshots({
+        timestamps: ['10'], // Refactor: 後で20%などに固定したい
+        filename: screenshotFileName, // スクリーンショットのファイル名
+        folder: SCREENSHOT_DIR, // 保存先フォルダ
+        size: '1280x720', // 画像サイズ
+      })
       .on('end', () => {
         console.log(`Screenshot saved to: ${screenshotPath}`);
-        resolve(screenshotPath);  // スクリーンショットのファイルパスを返す
+        resolve(screenshotPath); // スクリーンショットのファイルパスを返す
       })
       .on('error', (err) => {
         console.error('Error taking screenshot:', err);
@@ -97,7 +103,6 @@ export async function takeScreenshot(videoFilePath: string): Promise<string> {
       });
   });
 }
-
 
 /**
  * 動画をHLS形式でストリーミング可能な.m3u8と.tsセグメントに変換する関数
@@ -108,14 +113,16 @@ export async function takeScreenshot(videoFilePath: string): Promise<string> {
 export async function createHlsStream(videoFilePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     // 動画のファイル名からフォルダ名を生成
-    const videoFileName = path.basename(videoFilePath, path.extname(videoFilePath));
-    
+    const videoFileName = path.basename(
+      videoFilePath,
+      path.extname(videoFilePath)
+    );
+
     // 動画ごとの専用フォルダを作成
     const outputDir = path.join(STREAM_DIR, videoFileName);
-    
+
     // もし既に同名のフォルダが存在する場合、クリーンアップを行う
     // cleanupHlsFiles(); // クリーンアップ関数を呼び出す
-    
 
     // 出力ディレクトリが存在しない場合は作成
     if (!fs.existsSync(outputDir)) {
@@ -134,12 +141,13 @@ export async function createHlsStream(videoFilePath: string): Promise<string> {
         '-sc_threshold 0', // スライディングウィンドウのサイズ
         '-hls_time 10', // 1つのTSセグメントの長さ（秒）
         '-hls_list_size 0', // m3u8プレイリストに記載するセグメント数（0で全て）
-        '-hls_segment_filename', path.join(outputDir, `${videoFileName}-%03d.ts`) // セグメントファイルの命名規則
+        '-hls_segment_filename',
+        path.join(outputDir, `${videoFileName}-%03d.ts`), // セグメントファイルの命名規則
       ])
       .output(outputFilePath)
       .on('end', () => {
         console.log(`HLS streaming created successfully: ${outputFilePath}`);
-        resolve(outputFilePath);  // m3u8ファイルのパスを返す
+        resolve(outputFilePath); // m3u8ファイルのパスを返す
       })
       .on('error', (err) => {
         console.error('Error creating HLS stream:', err);
@@ -148,7 +156,6 @@ export async function createHlsStream(videoFilePath: string): Promise<string> {
       .run();
   });
 }
-
 
 /**
  * 指定したディレクトリ内に存在するフォルダがあれば、それらを削除する関数
@@ -161,13 +168,13 @@ function cleanupAllHlsFiles(): void {
   files.forEach((file) => {
     const fullPath = path.join(STREAM_DIR, file);
 
-    if (fs.statSync(fullPath).isDirectory()) { // フォルダが見つかった場合
+    if (fs.statSync(fullPath).isDirectory()) {
+      // フォルダが見つかった場合
       console.log(`Deleting folder: ${fullPath}`);
       fs.rmSync(fullPath, { recursive: true, force: true }); // フォルダを削除（再帰的に）
     }
   });
 }
-
 
 /**
  * 拡張子を除いたファイル名を受け取り、そのディレクトリ内のファイルを削除する関数
@@ -179,11 +186,11 @@ export async function cleanupHlsFiles(fileName: string): Promise<void> {
 
     // STREAM_DIRと連結してディレクトリパスを作成
     const targetDir = path.join(STREAM_DIR, baseName);
-    
+
     // 指定されたディレクトリが存在するか確認
     if (fs.existsSync(targetDir)) {
       console.log(`Deleting folder and its contents: ${targetDir}`);
-      
+
       // フォルダ内のすべてのファイルとサブディレクトリを再帰的に削除
       await fs.promises.rm(targetDir, { recursive: true, force: true });
       console.log(`Deleted folder and its contents: ${targetDir}`);
@@ -207,10 +214,17 @@ export async function createHlsForVideos(): Promise<void> {
     for (const video of videos) {
       try {
         // 動画のファイルパスから拡張子を除いたファイル名を取得
-        const baseFileName = path.basename(video.filePath, path.extname(video.filePath));
+        const baseFileName = path.basename(
+          video.filePath,
+          path.extname(video.filePath)
+        );
 
         // 対応する .m3u8 ファイルのパスを作成
-        const hlsFilePath = path.join(STREAM_DIR, baseFileName, `${baseFileName}.m3u8`);
+        const hlsFilePath = path.join(
+          STREAM_DIR,
+          baseFileName,
+          `${baseFileName}.m3u8`
+        );
 
         // .m3u8 ファイルがすでに存在するか確認
         if (fs.existsSync(hlsFilePath)) {
@@ -221,18 +235,20 @@ export async function createHlsForVideos(): Promise<void> {
 
         // .m3u8ファイルが存在しない場合、HLSを作成
         const hlsStream = await createHlsStream(video.filePath);
-        console.log(`全ての動画のHLSストリームの作成が完了しました: ${hlsStream}`);
-
+        console.log(
+          `全ての動画のHLSストリームの作成が完了しました: ${hlsStream}`
+        );
       } catch (error) {
         console.error(`動画 ${video.filePath} のHLS作成に失敗しました:`, error);
       }
     }
-
   } catch (error) {
-    console.error('データベースから動画情報を取得する際にエラーが発生しました:', error);
+    console.error(
+      'データベースから動画情報を取得する際にエラーが発生しました:',
+      error
+    );
   }
 }
-
 
 /**
  * 動画 ID に基づいて、対応する .m3u8 ファイルが存在しない場合にHLSを作成する関数
@@ -249,10 +265,17 @@ export async function createHlsForVideoById(videoId: number): Promise<void> {
 
     try {
       // 動画のファイルパスから拡張子を除いたファイル名を取得
-      const baseFileName = path.basename(video.filePath, path.extname(video.filePath));
+      const baseFileName = path.basename(
+        video.filePath,
+        path.extname(video.filePath)
+      );
 
       // 対応する .m3u8 ファイルのパスを作成
-      const hlsFilePath = path.join(STREAM_DIR, baseFileName, `${baseFileName}.m3u8`);
+      const hlsFilePath = path.join(
+        STREAM_DIR,
+        baseFileName,
+        `${baseFileName}.m3u8`
+      );
 
       // .m3u8 ファイルがすでに存在するか確認
       if (fs.existsSync(hlsFilePath)) {
@@ -265,13 +288,13 @@ export async function createHlsForVideoById(videoId: number): Promise<void> {
       // .m3u8ファイルが存在しない場合、HLSを作成
       const hlsStream = await createHlsStream(video.filePath);
       console.log(`HLSストリームの作成が完了しました: ${hlsStream}`);
-
     } catch (error) {
       console.error(`動画 ${video.filePath} のHLS作成に失敗しました:`, error);
     }
-
   } catch (error) {
-    console.error(`動画ID ${videoId} の情報取得時にエラーが発生しました:`, error);
+    console.error(
+      `動画ID ${videoId} の情報取得時にエラーが発生しました:`,
+      error
+    );
   }
 }
-

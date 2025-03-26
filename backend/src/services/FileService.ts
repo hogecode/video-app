@@ -1,12 +1,12 @@
-//Refactor: 肥大化しそうなのでutilsフォルダに汎用関数は移動する
-
+/**
+ * 主にセットアップ時にフォルダ情報とDBを同期するためのサービスファイル
+ */
 import * as fs from 'fs';
-import * as ini from 'ini';
 import * as path from 'path';
 
 import { Video, XMLCommentFile } from '@prisma/client';
 
-import { COMMENT_DIR, CONFIG_PATH } from '../constants';
+import { COMMENT_DIR } from '../constants';
 import {
     addXMLCommentFile, deleteXMLCommentFileByFilePath, getAllXMLCommentFiles
 } from '../repositories/CommentRepository';
@@ -14,6 +14,8 @@ import { addVideo, deleteVideoByFilePath, getAllVideos } from '../repositories/V
 import {
     convertXmlToJsonAndSave, getCommentCount, getCommentTimestamp
 } from './CommentFileService';
+import { getFolderPaths } from './ConfigService';
+import { getMp4FilesFromFolderAsync } from './FileReadService';
 import {
     cleanupHlsFiles, createHlsForVideos, createHlsStream, takeScreenshot
 } from './VideoService';
@@ -25,7 +27,6 @@ import {
  */
 export async function mergeVideosWithComments(): Promise<any[]> {
   try {
-    console.log(['FileService.ts'],['mergeVideosWithComments()']);
     // Videos と XMLCommentFiles をすべて取得
     const videos = await getAllVideos();
     const xmlCommentFiles = await getAllXMLCommentFiles();
@@ -284,116 +285,4 @@ export async function syncXMLWithJson(): Promise<void> {
     throw new Error('Failed to sync XML with JSON');
   }
 }
-
-
-/**
- * config.iniファイルからフォルダパスを取得する関数
- * Refactor: tryを使う
- * @returns {string[]} フォルダパスの配列
- */
-export function getFolderPaths(): string[] {
-
-  // config.iniファイルを読み込む
-  const config = ini.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-  // console.log('configファイルのパスは', CONFIG_PATH);
-
-  // 'paths' で始まるキー名を取得して、それぞれの値を処理
-  const folderPaths: string[] = [];
-
-  // 'paths'で始まるキーをフィルタリングして処理
-  for (const key in config.folders) {
-    if (key.startsWith('paths')) {
-      const paths = config.folders[key];
-      
-      // 改行で分割し、不要な空白を削除
-      const pathsArray = paths
-        .split(/\r?\n/)  // 改行で分割
-        .map((folderPath: string) => folderPath.trim())  // 各パスの前後の空白を削除
-        .filter(Boolean);  // 空文字列を除外
-
-      // folderPathsに追加
-      folderPaths.push(...pathsArray);
-    }
-  }
-  // Memo: 何度も呼ばれるのでコメントアウト
-  //console.log('動画のフォルダのパスは', folderPaths);
-  //console.log('getFolderPaths()の処理が完了しました');
-
-  return folderPaths;
-}
-
-
-
-/**
- * 非同期で指定されたフォルダ内の全ての.mp4ファイルのパスを取得する関数
- * @param folderPath フォルダのパス
- * @returns {Promise<string[]>} フォルダ内の.mp4ファイルの絶対パスの配列
- */
-async function getMp4FilesFromFolderAsync(folderPath: string): Promise<string[]> {
-  // フォルダ内のファイルを非同期で取得
-  const files = await fs.promises.readdir(folderPath);
-
-  // .mp4ファイルのパスをフィルタリングして配列で返す
-  const mp4Files = files
-    .filter(file => file.endsWith('.mp4'))  // 拡張子が.mp4のファイルをフィルタリング
-    .map(file => path.join(folderPath, file));  // フルパスを生成
-  console.log('getMp4FilesFromFolderAsync()の処理が完了しました');
-  return mp4Files;
-}
-
-
-/**
- * 指定されたフォルダ内の全てのXMLファイルのパスを非同期で取得する関数
- * @param folderPath フォルダのパス
- * @returns {Promise<string[]>} フォルダ内のXMLファイルのパスの配列
- */
-async function getXmlFilesFromFolder(folderPath: string): Promise<string[]> {
-  try {
-    // フォルダ内のファイルを非同期で読み込み
-    const files = await fs.promises.readdir(folderPath);
-
-    // .xmlファイルのパスをフィルタリングして配列で返す
-    const xmlFiles = files
-      .filter(file => file.endsWith('.xml'))  // 拡張子が.xmlのファイルをフィルタリング
-      .map(file => path.join(folderPath, file));  // フルパスを作成
-    return xmlFiles;
-  } catch (err) {
-    console.error('フォルダ内のXMLファイルの取得中にエラーが発生しました:', err);
-    return []; // エラーが発生した場合は空の配列を返す
-  }
-}
-
-
-/**
- * 複数の文字列配列を引数に取り、それらの文字列をconfig.iniの[folders]セクションのpathsに書き込む非同期関数
- * アプリ初期化時にexeから使う用途
- * Memo: 多分移動したほうがいい
- * @param folderPaths 複数の文字列配列（各配列にはフォルダパスが含まれる）
- * @returns {Promise<void>} 書き込みが完了するまでの非同期処理
- */
-export async function writeFolderPathsToConfig(...folderPaths: string[]): Promise<void> {
-  try {
-    // 現在のconfig.iniファイルを非同期で読み込む
-    const configFileContent = await fs.promises.readFile(CONFIG_PATH, 'utf-8');
-
-    // 既存の設定をパース
-    const config = ini.parse(configFileContent);
-
-    // pathsに新しいフォルダパスを追加
-    config.folders = config.folders || {}; // foldersセクションがない場合は作成
-    config.folders.paths = folderPaths.join(','); // 複数のフォルダパスをカンマ区切りの文字列として格納
-
-    // 新しい内容をconfig.iniファイルに書き込む
-    await fs.promises.writeFile(CONFIG_PATH, ini.stringify(config));
-
-    console.log('config.iniが更新されました');
-  } catch (err) {
-    console.error('config.iniの書き込み中にエラーが発生しました:', err);
-    throw err;  // エラーを再スロー
-  }
-}
-
-
-
-
 

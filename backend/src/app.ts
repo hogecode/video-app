@@ -12,8 +12,9 @@ import FileRouter from './routers/FileRouter';
 import StreamRouter from './routers/StreamRouter';
 import WatchHistoryRouter from './routers/WatchHistoryRouter';
 import {
-    getFolderPaths, syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
+    syncVideosAndXMLCommentFilesWithDatabase, syncXMLWithJson
 } from './services/FileService';
+import { getFolderPaths } from './services/ConfigService';
 import { createHlsForVideos } from './services/VideoService';
 
 // Expressアプリケーションの初期化
