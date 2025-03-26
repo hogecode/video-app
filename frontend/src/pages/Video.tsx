@@ -7,8 +7,8 @@ import VideoPlayerList from 'components/VideoPlayerList';
 import { useSettings } from 'context/SettingsContext';
 import { useVideoContext } from 'context/VideoContext';
 import UseFetch from 'hooks/UseFetch';
-import VideoPlayer from 'hooks/useHLSPlayer';
-import React, { lazy, useEffect, useLayoutEffect, useState } from 'react';
+import VideoPlayer from 'hooks/useVideoPlayer';
+import React, { lazy, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLocalStorage } from 'react-use';
 
@@ -37,20 +37,22 @@ const Video: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [commentDelay, setCommentDelay] = useState<number>(0); //コメント遅延秒数
-  const [videoHeight, setVideoHeight] = useState(250); // videoタグの高さを取得
-  
+  const [videoHeight, setVideoHeight] = useState(300); // videoタグの高さを取得
+  const [fileResponse, setFileResponse] = useState(null);
+
   const [selectedTab, setSelectedTab] = useLocalStorage<string>('selectedTab', 'Meta Data');
 
-  let fileResponse = null;
-  
 
   const handleCommentDelay = (newDelay: number) => {
     setCommentDelay(newDelay);
   };
 
   // タブが切り替わったときの処理
+  // 稀に画面が停止するのでstartTransitionを利用
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setSelectedTab(newValue);
+    startTransition(() => {
+      setSelectedTab(newValue);
+    });
   };
 
   // 再生時間が変わったときに呼ばれる関数
@@ -92,8 +94,9 @@ const Video: React.FC = () => {
         try {
           // /api/files/:id にリクエスト
           setLoading(true);
-          fileResponse = await UseFetch<any>(`/api/files/${videoId}`);
-          // console.log('Files API Response:', filesResponse);
+          const fileResponse = await UseFetch<any>(`/api/files/${videoId}`);
+          setFileResponse(fileResponse);
+          console.log('Files API Response:', fileResponse);
 
           const allComments: Comment[] = fileResponse.CommentJson?.chats || []; // 取得したコメント
           const filteredComments = filterComments(
@@ -119,15 +122,18 @@ const Video: React.FC = () => {
     fetchData();
   }, [videoId]);
 
+
   // 2つ目のuseEffect(hlsSourceの更新）
   // 一個目のuseEffectが完了してから処理を行いたいため
   useEffect(() => {
     if (!isDataFetched) return; 
 
     console.log('VideoContextのselectedVideo:', selectedVideo);
+    
     // HLSモードが無効な場合、MP4のソースを設定
     if (!hlsMode) {
-      const folder = fileResponse.video.folderPath.split('/').pop(); // 最後の部分（フォルダ名）を取得
+      console.log('fileResponse: ', fileResponse);
+      const folder = fileResponse?.video.folderPath.split(/[/\\]/).pop();// 最後の部分（フォルダ名）を取得
       const encodedFolderName = encodeURIComponent(folder); // フォルダ名をエンコード
       const videoFileName = selectedVideo?.fileName;
       
@@ -138,12 +144,11 @@ const Video: React.FC = () => {
     } else {
       const videoFileName = selectedVideo?.fileName.replace(/\.mp4$/, ''); // .mp4を取り除く
       setVideoSource(`${HLS_STREAM_URL}/${videoFileName}/${videoFileName}.m3u8`); // HLSのソースを設定
-
     }
-
-      console.log(videoSource);
+      
+      console.log('videoSource: ', videoSource);
       setLoading(false);
-  }, [isDataFetched, hlsMode, videoId, selectedVideo]);  // isDataFetchedを依存関係に追加
+  }, [isDataFetched, videoSource, videoId, selectedVideo]);  // isDataFetchedを依存関係に追加
 
 
   // 初期表示時とリサイズ時に高さを調整する

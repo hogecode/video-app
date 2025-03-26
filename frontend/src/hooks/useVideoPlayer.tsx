@@ -35,6 +35,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
   // Hls.jsとPlyrのセットアップ
   // Memo: sourceを依存配列にする必要はあるのか
   useEffect(() => {
+    console.log('hlsMode: ', hlsMode);
+    
     if (!videoRef.current) return;
 
     // mp4モードの場合に早期リターン
@@ -108,7 +110,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
         // 挙動がおかしくなるのでコメントアウト
         //poster={SCREENSHOT_URL +'/' +selectedVideo.fileName.replace(/\.mp4$/, '.png')}
       >
-        <source src={source} type="application/x-mpegURL" />
+        <source
+          src={source}
+          type={hlsMode ? 'application/x-mpegURL' : 'video/mp4'}
+        />
       </video>
     </div>
   );

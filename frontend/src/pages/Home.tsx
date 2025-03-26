@@ -150,7 +150,14 @@ const VideoList: React.FC = () => {
           />
 
           {/* ツールバーの2段目を横並びにするためのBox */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '6px',
+            }}
+          >
             <Box display="flex" alignItems="center">
               {/* ファイル名の並べ替え */}
               <IconButton
@@ -225,7 +232,7 @@ const VideoList: React.FC = () => {
               }}
             >
               {/* 表示切替用のチップ */}
-              <Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Chip
                   icon={<GridView />}
                   clickable
@@ -247,6 +254,7 @@ const VideoList: React.FC = () => {
                     viewType === 'centered-no-image' ? 'primary' : 'default'
                   }
                   onClick={() => setViewType('centered-no-image')}
+                  sx={{ marginRight: 0.5 }}
                 />
               </Box>
             </Box>

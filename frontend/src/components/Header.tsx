@@ -59,7 +59,7 @@ const Header: React.FC = () => {
         justifyContent: 'space-between', // 左右の要素を分ける
         alignItems: 'center',
         padding: '10px 20px',
-        backgroundColor: 'gray',//'#1976d2',
+        backgroundColor: 'black', //'gray',
         color: 'white',
         position: 'sticky',
         top: 0,
