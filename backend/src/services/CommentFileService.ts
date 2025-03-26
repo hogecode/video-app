@@ -177,7 +177,6 @@ export async function convertXmlToJsonAndSave(filePath: string): Promise<void> {
 export async function readCommentJsonFile(JsonfilePath: string): Promise<any> {
   try {
     const jsonData = await fs.promises.readFile(JsonfilePath, 'utf-8');
-    console.log('JSONファイルを読み込みました:', JsonfilePath);
 
     return JSON.parse(jsonData); // JSONをオブジェクトとして返す
   } catch (error) {

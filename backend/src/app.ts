@@ -51,7 +51,8 @@ app.use(compression());
 app.use(etagMiddleware);
 
 // ロギングミドルウェア
-app.use(requestLoggerMiddleware);
+// ログが多すぎるのでコメントアウト
+//app.use(requestLoggerMiddleware);
 
 // console.logとerrorをwinstonでラップするミドルウェア
 app.use(logMiddleware);
