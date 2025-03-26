@@ -7,6 +7,8 @@ import * as ini from 'ini';
 
 import { CONFIG_PATH } from '../constants';
 
+let isHlsModeEnabled: boolean = false;
+
 /**
  * config.iniファイルからフォルダパスを取得する関数
  * Refactor: tryを使う
@@ -45,23 +47,33 @@ export function getFolderPaths(): string[] {
 
 /**
  * config.iniファイルから hls_mode の値を取得し、trueかどうかを確認する関数
- * @returns {boolean} hls_mode が存在し、かつ true の場合は true、そうでない場合は false
+ * この関数は設定をグローバル変数に格納する
  */
-export function isHlsModeEnabled(): boolean {
+export function loadHlsModeSetting(): void {
   try {
     // config.iniファイルを読み込む
     const config = ini.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
 
-    // 'settings' セクションが存在するか、かつ 'hls_mode' が 'true' であるか確認
-    if (config.settings && config.settings.hls_mode === 'true') {
-      return true; // hls_mode が true の場合
+    // 'settings' セクションが存在し、かつ 'hls_mode' が 'true' であるか確認
+    // Memo: 文字列とBoolean型にも対応
+    if (config?.settings?.hls_mode === true || config?.settings?.hls_mode === 'true') {
+      isHlsModeEnabled = true; // hls_mode が true の場合、グローバル変数を true に設定
+    } else {
+      isHlsModeEnabled = false; // 'hls_mode' が存在しないか、true でない場合は false
     }
-
-    return false; // hls_mode が存在しないか、true でない場合
+    console.log('loadHlsModeSetting()の処理が完了しました', isHlsModeEnabled);
   } catch (error) {
     console.error('Failed to read config.ini', error);
-    return false; // エラーが発生した場合は false を返す
+    isHlsModeEnabled = false; // エラーが発生した場合も false に設定
   }
+}
+
+/**
+ * グローバル変数 isHlsModeEnabled を使って hls_mode の状態を確認する関数
+ * @returns {boolean} hls_mode が true であれば true、それ以外は false
+ */
+export function checkHlsModeEnabled(): boolean {
+  return isHlsModeEnabled;
 }
 
 
