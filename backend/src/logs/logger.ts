@@ -8,7 +8,14 @@ const timestamp = new Date().toISOString().split('T')[0]; // 日付形式 (YYYY-
 
 // winstonインスタンスの作成
 const logger = winston.createLogger({
-  level: 'error', // 'error'レベル以上のログを出力
+  level: 'info', // 'info'レベル以上のログを出力
+  format: winston.format.combine(
+    winston.format.colorize(), // ログに色をつける
+    winston.format.timestamp(), // タイムスタンプを付与
+    winston.format.printf(({ timestamp, level, message }) => {
+      return `[${timestamp}] ${level}: ${message}`;
+    })
+  ),
   transports: [
     // コンソールにログを出力
     new winston.transports.Console({
@@ -18,10 +25,6 @@ const logger = winston.createLogger({
     new winston.transports.File({
       filename: path.join(LOG_DIRECTORY, `error-${timestamp}.log`), // ファイル名に日付を追加
       level: 'error',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-      ),
     }),
   ],
 });

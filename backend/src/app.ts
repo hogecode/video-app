@@ -17,7 +17,7 @@ import {
 import { checkHlsModeEnabled, getFolderPaths, loadHlsModeSetting } from './services/ConfigService';
 import { createHlsForVideos } from './services/VideoService';
 import { etagMiddleware } from './middleware/etagMiddleware';
-import { errorLoggerMiddleware } from './middleware/errorLoggerMiddleware';
+import { logMiddleware } from './middleware/logMiddleware';
 import { requestLoggerMiddleware } from './middleware/requestLoggerMiddleware';
 import { cacheMiddleware } from './middleware/cacheMiddleware';
 
@@ -52,8 +52,8 @@ app.use(etagMiddleware);
 // ロギングミドルウェア
 app.use(requestLoggerMiddleware);
 
-// console.logをwinstonでラップするミドルウェア
-app.use(errorLoggerMiddleware);
+// console.logとerrorをwinstonでラップするミドルウェア
+app.use(logMiddleware);
 
 // APIキャッシュミドルウェアの設定
 // Fix: 変更の実装の見直し
