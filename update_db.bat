@@ -1,9 +1,10 @@
 @echo on
+chcp 65001
 
-:: アプリが起動していれば停止する
+:: アプリケーションが起動している場合停止する
 pm2 list | findstr /C:"video_app" > nul
 if %errorlevel%==0 (
-    echo video_appが存在しているため停止します...
+    echo video_appが存在している場合は停止します...
     pm2 stop video_app
 ) 
 
@@ -19,6 +20,7 @@ npm run migrate-dev
 :: PM2を再起動する
 pm2 start video_app
 
-:: 終了
-echo バッチ処理が完了しました。
+:: 完了メッセージ
+echo 処理が完了しました。
 pause
+
