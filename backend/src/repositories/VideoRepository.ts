@@ -12,7 +12,6 @@ import prisma from '../prisma';
 export async function getAllVideos(): Promise<Video[]> {
   try {
     const videos = await prisma.video.findMany();
-    console.log('getAllVideos()の処理が完了しました');
     return videos; // 取得した動画のデータを返す
 
   } catch (error) {
