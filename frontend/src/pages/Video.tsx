@@ -8,7 +8,7 @@ import { useSettings } from 'context/SettingsContext';
 import { useVideoContext } from 'context/VideoContext';
 import UseFetch from 'hooks/UseFetch';
 import VideoPlayer from 'hooks/useVideoPlayer';
-import React, { lazy, startTransition, useEffect, useLayoutEffect, useState } from 'react';
+import React, { lazy, startTransition, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLocalStorage } from 'react-use';
 
@@ -40,8 +40,34 @@ const Video: React.FC = () => {
   const [videoHeight, setVideoHeight] = useState(300); // videoタグの高さを取得
   const [fileResponse, setFileResponse] = useState(null);
 
+  const videoRef = useRef<any>(null);
   const [selectedTab, setSelectedTab] = useLocalStorage<string>('selectedTab', 'Meta Data');
 
+  // 動画の高さを更新する関数
+  const updateHeight = () => {
+    if (videoRef.current) {
+      const height = videoRef.current.getVideoHeight();
+      setVideoHeight(height);
+    }
+  };
+
+  useLayoutEffect(() => {
+    // 最初に動画の高さを取得
+    updateHeight();
+
+    // ウィンドウのリサイズ時にも高さを更新
+    const handleResize = () => {
+      updateHeight();
+    };
+
+    // リサイズイベントをリスン
+    window.addEventListener('resize', handleResize);
+
+    // クリーンアップ
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [videoRef.current]); // videoRef.current を依存配列に追加
 
   const handleCommentDelay = (newDelay: number) => {
     setCommentDelay(newDelay);
@@ -151,53 +177,6 @@ const Video: React.FC = () => {
   }, [isDataFetched, videoSource, videoId, selectedVideo]);  // isDataFetchedを依存関係に追加
 
 
-  // 初期表示時とリサイズ時に高さを調整する
-  // Memo: ビデオの高さに合わせてコメントの高さを調整するため
-  // Refactor: 重ければdebounceも検討
-  useLayoutEffect(() => {
-    const updateVideoHeight = () => {
-      // `video` 要素を document.querySelector で取得
-      const videoElement = document.querySelector('video');
-
-      if (videoElement) {
-        // `video` 要素の高さを取得
-        setVideoHeight(videoElement.clientHeight);
-      }
-    };
-
-    // Refactor: 可読性最悪なのでリファクタリング
-    // レンダリング後に高さを取得するためにsetTimeoutで遅延
-    const timeoutId = setTimeout(() => {
-      updateVideoHeight();
-    }, 300); // 少し遅れて実行
-
-    // 初回で行かない場合があるのでもう一度・・・
-    const timeoutId2 = setTimeout(() => {
-      updateVideoHeight();
-    }, 2000); // 少し遅れて実行
-
-    const timeoutId3 = setTimeout(() => {
-      updateVideoHeight();
-    }, 3500); // 少し遅れて実行
-
-    // 最後にもう一回・・・
-    const timeoutId4 = setTimeout(() => {
-      updateVideoHeight();
-    }, 7000); // 少し遅れて実行
-
-    // ウィンドウリサイズ時に高さを再計算
-    window.addEventListener('resize', updateVideoHeight);
-
-    // クリーンアップでリサイズイベントリスナーを削除
-    return () => {
-      clearTimeout(timeoutId);
-      clearTimeout(timeoutId2);
-      clearTimeout(timeoutId3);
-      clearTimeout(timeoutId4);
-      window.removeEventListener('resize', updateVideoHeight);
-    };
-  }, []); //
-
   // ローディング中に表示するスピナー
   if (loading) {
     return (
@@ -227,7 +206,7 @@ const Video: React.FC = () => {
       >
         {/* VideoPlayerコンポーネント */}
         <Box sx={{ maxWidth: '850px', flexGrow: 1 }}>
-          <VideoPlayer source={videoSource} onTimeUpdate={handleTimeUpdate} />
+          <VideoPlayer ref={videoRef} source={videoSource} onTimeUpdate={handleTimeUpdate} />
         </Box>
 
         {/* VideoComments */}

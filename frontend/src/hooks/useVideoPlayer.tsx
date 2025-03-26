@@ -3,25 +3,57 @@
 import { useVideoContext } from 'context/VideoContext';
 import Hls from 'hls.js';
 import Plyr from 'plyr';
-import React, { useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useDoubleTapSeek from './useDoubleTapSeek';
 import { useHlsMode } from 'context/HlsModeContext';
+import { useDebounce, useTimeout, useTimeoutFn } from 'react-use';
+import { useEventListener } from 'usehooks-ts';
 
 interface VideoPlayerProps {
   source: string; // sourceをプロップスとして受け取る
   onTimeUpdate: (time: number) => void;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
+const VideoPlayer = forwardRef((props: VideoPlayerProps, ref) => {
+  const { source, onTimeUpdate } = props;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null); // Hlsインスタンスを保持するためのref
-  
+  const [height, setHeight] = useState<number | null>(null);
+
   const { selectedVideo, setSelectedVideo, filteredVideos } = useVideoContext();
   const navigate = useNavigate();
   const { hlsMode } = useHlsMode();
   useDoubleTapSeek(videoRef);
+
+  // useImperativeHandleを使用して親コンポーネントに高さを渡す
+  useImperativeHandle(ref, () => ({
+    getVideoHeight: () => {
+      return videoRef.current ? videoRef.current.clientHeight : null;
+    },
+  }));
+
+  // 動画の高さを更新
+  const updateHeight = () => {
+    if (videoRef.current) {
+      setHeight(videoRef.current.clientHeight);
+    }
+  };
+
+  useEventListener('resize', () => {
+    updateHeight();
+  });
+
+  // あまり意味ない
+  // Memo: コールバック内でuseTimeoutFnを使うとエラーになる
+  // useTimeoutFn(updateHeight, 200);
+  // useTimeoutFn(updateHeight, 600);
+
+  // 初回マウント時に高さを設定
+  useEffect(() => {
+    updateHeight();
+  }, []);
 
   // Plyrのオプション
   const plyrOptions = {
@@ -36,7 +68,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
   // Memo: sourceを依存配列にする必要はあるのか
   useEffect(() => {
     console.log('hlsMode: ', hlsMode);
-    
+
     if (!videoRef.current) return;
 
     // mp4モードの場合に早期リターン
@@ -56,7 +88,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
       });
 
       hls.attachMedia(videoRef.current);
-
     } else {
       // Hls.jsがサポートされていない場合
       const player = new Plyr(videoRef.current, plyrOptions);
@@ -68,12 +99,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
         hlsRef.current.destroy();
       }
     };
-  }, [source]); 
+  }, [source]);
 
   // 再生時間が変わった時に親コンポーネントに通知する関数
   const handleTimeUpdate = () => {
     if (videoRef.current) {
-      onTimeUpdate(videoRef.current.currentTime); 
+      onTimeUpdate(videoRef.current.currentTime);
     }
   };
 
@@ -117,6 +148,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ source, onTimeUpdate }) => {
       </video>
     </div>
   );
-};
+});
 
 export default VideoPlayer;
