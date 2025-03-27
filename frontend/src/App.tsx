@@ -2,7 +2,7 @@
 
 import { SettingsProvider } from 'context/SettingsContext';
 import { VideoProvider } from 'context/VideoContext';
-import SettingModal from 'components/Settings';
+import Settings from 'pages/Settings';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -73,6 +73,9 @@ const AppWithTheme: React.FC = () => {
 
           {/* 動的ルート */}
           <Route path="/videos/:videoId" element={<Video />} />
+
+          {/* 設定画面 */}
+          <Route path="/settings" element={<Settings />} />
 
           {/* 404ページ */}
           <Route path="*" element={<NotFound />} />

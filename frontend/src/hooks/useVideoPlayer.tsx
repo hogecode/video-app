@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 import useDoubleTapSeek from './useDoubleTapSeek';
 import { useHlsMode } from 'context/HlsModeContext';
-import { useDebounce, useTimeoutFn } from 'react-use';
-import { useEventListener, useTimeout } from 'usehooks-ts';
+import { useDebounce, useTimeout, useTimeoutFn } from 'react-use';
+import { useEventListener } from 'usehooks-ts';
 
 interface VideoPlayerProps {
   source: string; // sourceをプロップスとして受け取る
@@ -45,10 +45,10 @@ const VideoPlayer = forwardRef((props: VideoPlayerProps, ref) => {
     updateHeight();
   });
 
-  // 機能しない
-  useTimeout(updateHeight, 200);
-  useTimeout(updateHeight, 400);
-  useTimeout(updateHeight, 800);
+  // あまり意味ない
+  // Memo: コールバック内でuseTimeoutFnを使うとエラーになる
+  // useTimeoutFn(updateHeight, 200);
+  // useTimeoutFn(updateHeight, 600);
 
   // 初回マウント時に高さを設定
   useEffect(() => {
