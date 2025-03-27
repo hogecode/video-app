@@ -1,12 +1,14 @@
 import compression from 'compression';
 import cors from 'cors';
-import etag from 'etag';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import ffmpegPath from 'ffmpeg-static';
 import ffmpeg from 'fluent-ffmpeg';
 import path from 'path';
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
 
-import { BUILT_HTML_DIR, STATIC_DIR } from './constants';
+import { BUILT_HTML_DIR, CERT_DIR, STATIC_DIR } from './constants';
 import logger from './logs/logger';
 import FileRouter from './routers/FileRouter';
 import StreamRouter from './routers/StreamRouter';
@@ -25,7 +27,8 @@ import { cacheMiddleware } from './middleware/cacheMiddleware';
 // Expressアプリケーションの初期化
 const app = express();
 
-const port = 3002;
+const HTTP_PORT = 3002;
+const HTTPS_PORT =3100;
 
 
 // 外部ライブラリのミドルウェアを設定
@@ -135,8 +138,34 @@ app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(BUILT_HTML_DIR, 'index.html'));
 });
 
-
+/*
 // サーバーの起動
 app.listen(port, () => {
   console.log(`サーバーが http://localhost:${port} で起動しています`);
 });
+*/
+
+// HTTPサーバーの起動
+const httpServer = http.createServer(app);
+
+let httpsServer;
+if (fs.existsSync(path.join(CERT_DIR, 'server-cert.crt')) && fs.existsSync(path.join(CERT_DIR, 'server-key.key'))) {
+  // HTTPS証明書がある場合、HTTPSサーバーを起動
+  const httpsOptions = {
+    key: fs.readFileSync(path.join(CERT_DIR, 'server-key.key')),
+    cert: fs.readFileSync(path.join(CERT_DIR, 'server-cert.crt')),
+  };
+
+  httpsServer = https.createServer(httpsOptions, app);
+}
+
+// 両方のサーバーを開始
+httpServer.listen(HTTP_PORT, () => {
+  console.log(`HTTP server is running on port ${HTTP_PORT}`);
+});
+
+if (httpsServer) {
+  httpsServer.listen(HTTPS_PORT, () => {
+    console.log(`HTTPS server is running on port ${HTTPS_PORT}`);
+  });
+}

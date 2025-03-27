@@ -7,4 +7,5 @@ migration_lock.toml
 src/prisma/migrations/*_init/
 
 src/logs/logs/*.log
+src/cert/*
 
