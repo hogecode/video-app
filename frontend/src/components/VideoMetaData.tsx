@@ -50,7 +50,9 @@ const VideoMetaData: React.FC<VideoMetaDataProps> = ({ selectedVideo }) => {
                 : '無し'}
             </Typography>
 
+　　　　　　　
             {/* いいね */}
+            {/*
             <Typography
               variant="body2"
               color="textSecondary"
@@ -66,6 +68,7 @@ const VideoMetaData: React.FC<VideoMetaDataProps> = ({ selectedVideo }) => {
                 </IconButton>
               )}
             </Typography>
+            */}
           </Box>
         </CardContent>
       </Card>

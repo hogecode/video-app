@@ -1,19 +1,31 @@
 import { useTheme } from 'context/ThemeContext';
 import UseFetch from 'hooks/UseFetch';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
-    ArrowBack, ArrowForward, Brightness4, Brightness7, Home, Refresh, Settings
+  ArrowBack,
+  ArrowForward,
+  Brightness4,
+  Brightness7,
+  Home,
+  Refresh
 } from '@mui/icons-material';
 // eslint-disable-next-line
 import { Box, IconButton } from '@mui/material';
 
+import SettingModal from './Settings';
 
 const Header: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const navigate = useNavigate(); // useNavigateフックを使って遷移操作を行う
 
   const { theme, toggleTheme } = useTheme();
+
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
 
   const handleGoHome = () => {
     navigate('/'); // /（ホーム）ページにリダイレクト
@@ -64,7 +76,7 @@ const Header: React.FC = () => {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        background: '#202020'
+        background: '#202020',
       }}
     >
       {/* 左側: 前へ、後ろへボタン */}
@@ -93,10 +105,8 @@ const Header: React.FC = () => {
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <IconButton onClick={toggleTheme} color="inherit">
           {theme === 'dark' ? <Brightness7 /> : <Brightness4 />}
-        </IconButton>
-        <IconButton component={Link} to="/settings" sx={{ color: 'white' }}>
-          <Settings />
-        </IconButton>
+        </IconButton>{' '}
+        <SettingModal isDialogOpen={isModalOpen} onClose={toggleModal} />
       </Box>
     </Box>
   );
