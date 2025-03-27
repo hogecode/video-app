@@ -105,10 +105,10 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
             <Typography
               variant="body2"
               sx={{
-                whiteSpace: 'nowrap', // テキストが1行に収まるようにする
-                overflow: 'hidden', // オーバーフローした部分を隠す
-                textOverflow: 'ellipsis', // オーバーフローした部分に「...」を表示
-                fontSize: '0.7rem', // フォントサイズを小さくする
+                whiteSpace: 'nowrap',
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis', 
+                fontSize: '0.7rem', 
               }}
             >
               {comment.message}

@@ -13,6 +13,7 @@ import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Video } from '../types'; // Video 型をインポート
 import { SCREENSHOT_URL } from '../constants';
 import { useTheme } from 'context/ThemeContext';
+import { useIntersectionObserver } from 'usehooks-ts';
 
 interface VideoListProps {
   filteredVideos: Video[];
@@ -24,6 +25,11 @@ const CenteredVideoList: React.FC<VideoListProps> = ({
   handleVideoClick,
 }) => {
   const { theme, toggleTheme } = useTheme();
+
+  // IntersectionObserverフックを使用
+  const { isIntersecting, ref } = useIntersectionObserver({
+    threshold: 0.5,
+  });
 
   return (
     <>
@@ -67,13 +73,16 @@ const CenteredVideoList: React.FC<VideoListProps> = ({
               >
                 <ImageListItem>
                   <img
+                    ref={ref}
                     src={
-                      video.screenshotFilePath
-                        ? SCREENSHOT_URL +
-                          '/' +
-                          video.fileName.replace(/\.mp4$/, '.png')
+                      isIntersecting
+                        ? video.screenshotFilePath
+                          ? SCREENSHOT_URL +
+                            '/' +
+                            video.fileName.replace(/\.mp4$/, '.png')
+                          : '/assets/fallback-image.svg'
                         : '/assets/fallback-image.svg'
-                    }
+                    } // IntersectionObserverでビューポートに入る前はフェイク画像を表示
                     alt="Screenshot"
                     loading="lazy"
                     crossOrigin="anonymous"
