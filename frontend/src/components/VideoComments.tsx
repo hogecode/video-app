@@ -6,21 +6,25 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { Comment } from '../types';
 import { Close, OpenInFull } from '@mui/icons-material';
 
+
 interface VideoCommentsProps {
   comments: Comment[];
   videoTime: number;
   commentDelay: number;
+  handleCommentListOpen: () => void;
 }
 
 const VideoComments: React.FC<VideoCommentsProps> = ({
   comments,
   videoTime,
   commentDelay,
+  handleCommentListOpen
 }) => {
   const listRef = useRef<any>(null); // react-virtualized Listの参照
   const [currentCommentIndex, setCurrentCommentIndex] = useState<number>(0); // 現在のコメントインデックス
   const [debouncedTime, setDebouncedTime] = useState<number>(videoTime); // デバウンスされた再生時間
   const [isHidden, setIsHidden] = useState<boolean>(false);
+
   const fixedVideoTime = videoTime + commentDelay; // コメント遅延時間を考慮した再生時間
 
   // 動画の再生時間が変更されたときの処理
@@ -77,6 +81,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
   // 表示状態をトグルする関数
   const toggleVisibility = () => {
     setIsHidden((prev) => !prev);
+    handleCommentListOpen();
   };
 
   // コメントのvposを「分:秒」形式に変換する関数
@@ -107,7 +112,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
               {formatTime(comment.vpos)} {/* vposを分:秒形式で表示 */}
             </Typography>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={10}>
             <Typography
               variant="body2"
               sx={{
@@ -115,6 +120,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 fontSize: '0.7rem',
+                marginLeft: '10px'
               }}
             >
               {comment.message}
@@ -127,14 +133,14 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
 
   if (isHidden) {
     return (
-      <Box sx={{ maxWidth: '300px' }}>
+      <Box>
         <OpenInFull onClick={toggleVisibility} sx={{ fontSize: '0.75rem' }}/>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ maxHeight: '500px', maxWidth: '300px'}}>
+    <Box sx={{ maxHeight: '500px', minWidth: '125px', maxWidth: '125px'}}>
       {/* ヘッダー */}
       <Box
         sx={{
@@ -144,18 +150,18 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="body2" sx={{ fontSize: '0.65rem', minWidth:'30px'}}>
+        <Typography variant="body2" sx={{ fontSize: '0.6rem', minWidth:'25px'}}>
           時間
         </Typography>
-        <Typography variant="body2" sx={{ fontSize: '0.65rem', minWidth:'60px'}}>
+        <Typography variant="body2" sx={{ fontSize: '0.6rem', minWidth:'45px', marginLeft: '-30px'}}>
           コメント
         </Typography>
-        <Close onClick={toggleVisibility} sx={{ fontSize: '0.75rem' }}/>
+        <Close onClick={toggleVisibility} sx={{ fontSize: '0.75rem', marginLeft: '-30px' }}/>
       </Box>
 
       <List
         ref={listRef}
-        width={300} // リストの幅
+        width={125} // リストの幅
         height={500} // リストの高さ
         rowCount={comments.length} // コメントの数
         rowHeight={25} // 各コメントの高さ

@@ -39,6 +39,7 @@ const Video: React.FC = () => {
   const [commentDelay, setCommentDelay] = useState<number>(0); //コメント遅延秒数
   const [videoHeight, setVideoHeight] = useState(300); // videoタグの高さを取得
   const [fileResponse, setFileResponse] = useState(null);
+  const [isCommentListOpen, setisCommentListOpen] = useState<boolean>(true);
 
   const videoRef = useRef<any>(null);
   const [selectedTab, setSelectedTab] = useLocalStorage<string>(
@@ -76,6 +77,11 @@ const Video: React.FC = () => {
     startTransition(() => {
       setSelectedTab(newValue);
     });
+  };
+
+  // コメントリストの表示をトグルする関数
+  const handleCommentListOpen = () => {
+    setisCommentListOpen(!isCommentListOpen);
   };
 
   // 再生時間が変わったときに呼ばれる関数
@@ -202,7 +208,7 @@ const Video: React.FC = () => {
         }}
       >
         {/* VideoPlayerコンポーネント */}
-        <Box sx={{ maxWidth: '850px', flexGrow: 1 }}>
+        <Box sx={{ maxWidth: isCommentListOpen ? '75%' : '95%', flexGrow: 1 }}>
           <VideoPlayer
             ref={videoRef}
             source={videoSource}
@@ -223,6 +229,7 @@ const Video: React.FC = () => {
               comments={comments}
               videoTime={currentTime}
               commentDelay={commentDelay}
+              handleCommentListOpen={handleCommentListOpen}
             />
           </Box>
         )}
@@ -268,6 +275,7 @@ const Video: React.FC = () => {
                 comments={comments || []}
                 videoTime={currentTime}
                 commentDelay={commentDelay}
+                handleCommentListOpen={handleCommentListOpen}
               />
             </Box>
           )}

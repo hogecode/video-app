@@ -54,7 +54,8 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({
     return storedSelectedYear ? JSON.parse(storedSelectedYear) : null;
   });
 
-  // 年別フィルタリング
+
+  // 年別で動画をフィルタリング
   const filterVideosByYear = (year: number | null) => {
     setSelectedYear(year);
     if (year === null) {
@@ -67,6 +68,7 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({
     }
   };
 
+  // チップで様々な方法で昇順降順を並び替えるための関数
   const sortVideos = (
     key: 'fileName' | 'commentedDate',
     order: 'asc' | 'desc'
@@ -116,6 +118,7 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({
     }
   }, []);
 
+  
   useEffect(() => {
     if (videos.length > 0) {
       localStorage.setItem('videos', JSON.stringify(videos)); // videosをローカルストレージに保存
