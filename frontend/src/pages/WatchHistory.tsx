@@ -25,13 +25,7 @@ const WatchHistory: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       const result = await UseFetch<any>('/api/history');
-      // フラットなデータ構造に変換
-      const flatData = result.map((history: any) => ({
-        ...history.watchedAt,
-        ...history.video,
-      }));
 
-      setData(flatData);
       setData(result);
       setLoading(false);
     };

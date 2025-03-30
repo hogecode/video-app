@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { List } from 'react-virtualized';
 
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 import { Comment } from '../types';
+import { Close, OpenInFull } from '@mui/icons-material';
 
 interface VideoCommentsProps {
   comments: Comment[];
@@ -19,7 +20,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
   const listRef = useRef<any>(null); // react-virtualized Listの参照
   const [currentCommentIndex, setCurrentCommentIndex] = useState<number>(0); // 現在のコメントインデックス
   const [debouncedTime, setDebouncedTime] = useState<number>(videoTime); // デバウンスされた再生時間
-
+  const [isHidden, setIsHidden] = useState<boolean>(false);
   const fixedVideoTime = videoTime + commentDelay; // コメント遅延時間を考慮した再生時間
 
   // 動画の再生時間が変更されたときの処理
@@ -73,6 +74,11 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
     }
   }, [debouncedTime, comments]);
 
+  // 表示状態をトグルする関数
+  const toggleVisibility = () => {
+    setIsHidden((prev) => !prev);
+  };
+
   // コメントのvposを「分:秒」形式に変換する関数
   const formatTime = (vpos: number) => {
     const minutes = Math.floor(vpos / 100 / 60); // 1秒=100vposなので1000で割り、さらに60で分に変換
@@ -106,9 +112,9 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
               variant="body2"
               sx={{
                 whiteSpace: 'nowrap',
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis', 
-                fontSize: '0.7rem', 
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                fontSize: '0.7rem',
               }}
             >
               {comment.message}
@@ -119,19 +125,34 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
     );
   };
 
+  if (isHidden) {
+    return (
+      <Box sx={{ maxWidth: '300px' }}>
+        <OpenInFull onClick={toggleVisibility} sx={{ fontSize: '0.75rem' }}/>
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ maxHeight: '500px', maxWidth:'300px',  overflowY: 'auto' }}> {/*出来なければ275pxに戻す*/}
+    <Box sx={{ maxHeight: '500px', maxWidth: '300px'}}>
       {/* ヘッダー */}
       <Box
         sx={{
           display: 'flex',
           marginBottom: '6px',
           gap: '30px',
+          justifyContent: 'space-between',
         }}
       >
-        <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>時間</Typography>
-        <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>コメント</Typography>
+        <Typography variant="body2" sx={{ fontSize: '0.65rem' }}>
+          時間
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: '0.65rem' }}>
+          コメント
+        </Typography>
+        <Close onClick={toggleVisibility} sx={{ fontSize: '0.75rem' }}/>
       </Box>
+
       <List
         ref={listRef}
         width={300} // リストの幅
