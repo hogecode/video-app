@@ -7,7 +7,8 @@
     "esModuleInterop": true,             // ESモジュールとCommonJSモジュールの互換性
     "skipLibCheck": true,                // ライブラリの型定義チェックをスキップ
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"                   // 出力先ディレクトリを指定
+    "outDir": "./dist",             // 出力先ディレクトリを指定
+    "sourceMap": true
   },
   "include": [
     "src/**/*.ts"                        // ソースコードのファイル
