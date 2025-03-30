@@ -18,7 +18,7 @@ import {
 import { createHlsForVideos, createHlsStreamFromFilePath } from '../services/VideoService';
 import { checkHlsModeEnabled } from '../services/ConfigService';
 import { getCommentJson } from '../services/FileReadService';
-import { cacheMiddleware } from '../middleware/cacheMiddleware';
+import { cacheMiddleware, clearCache } from '../middleware/cacheMiddleware';
 
 // Memo: prefixは/api/files
 const router = Router();
@@ -91,6 +91,8 @@ router.post('/refresh', async (req: Request, res: Response) => {
       mergeVideosWithComments(),
       checkHlsModeEnabled() && createHlsForVideos()
     ]);
+
+    clearCache("/api/files");
     
     res.status(200).json({ message: 'Refresh completed' }); 
 

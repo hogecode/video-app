@@ -5,6 +5,16 @@ import NodeCache from 'node-cache';
 const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 }); // stdTTL: 600秒（10分）
 
 /**
+ * キャッシュを削除する関数
+ * @param path: /api/filesのような形式
+ * IPアドレスやホストは含まない
+ */
+export function clearCache(path: string): void {
+  cache.del(path); // キャッシュを削除
+  console.log(`キャッシュ削除: ${path}`);
+}
+
+/**
  * キャッシュを管理するミドルウェア
  * キャッシュが存在する場合は、それを返し、存在しない場合はレスポンスをキャッシュする
  */
