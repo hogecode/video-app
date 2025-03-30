@@ -9,11 +9,12 @@ import {
   ImageList,
   ImageListItem,
 } from '@mui/material';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Delete, Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Video } from '../types'; // Video 型をインポート
 import { SCREENSHOT_URL } from '../constants';
 import { useTheme } from 'context/ThemeContext';
 import { useIntersectionObserver } from 'usehooks-ts';
+import UseFetch from 'hooks/UseFetch';
 
 interface VideoListProps {
   filteredVideos: any[];
@@ -25,6 +26,7 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
   handleVideoClick,
 }) => {
 
+  // ...分前、時間前など再生履歴を相対時間に変更する関数
   const getRelativeTime = (watchedAt: Date): string => {
     const now = new Date();
     const watchedDate = new Date(watchedAt);
@@ -47,8 +49,24 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
     }
   };
 
-  console.log(filteredVideos);
+  // 履歴削除関数
+const deleteHistoryById = async (id: string): Promise<void> => {
+  try {
+    const response = await UseFetch(`/api/history/${id}`, {
+      method: 'DELETE', // DELETEリクエストを送信
+    });
+      // 削除後の更新処理（例えば、データを再取得するなど）
+  } catch (error) {
+    console.error(`動画 ID ${id} の削除中にエラーが発生しました`, error);
+  }
+};
 
+  // 削除クリック時のイベントハンドラ
+  const handleDeleteClick = (event: React.MouseEvent, id: string) => {
+    event.stopPropagation(); // クリックイベントのバブリングを防止
+    deleteHistoryById(id);   // 履歴削除処理を実行
+  };
+  
   return (
     <>
       {filteredVideos.map((video) => (
@@ -120,9 +138,10 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
                       sx={{ mr: 1 }}
                     >
                       {video.watchedAt
-                        ? getRelativeTime(video.watchedAt) + 'に視聴'
+                        ? getRelativeTime(video.watchedAt) + '視聴'
                         : '無し'}
                     </Typography>
+                    <Delete onClick={(e) => handleDeleteClick(e, video.id)} />
                   </Box>
                 </Box>
               </Box>

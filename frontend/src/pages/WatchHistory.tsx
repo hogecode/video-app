@@ -7,10 +7,19 @@ import { Video } from 'types';
 import { SCROLL_SPEED } from '../constants';
 import TemplatePage from './TemplatePage';
 import UseFetch from 'hooks/UseFetch';
-import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import GridVideoList from 'components/GridVideoList';
 import CenteredVideoList from 'components/CenteredVideoList';
 import WatchHistoryList from 'components/WatchHistoryList';
+import { Delete } from '@mui/icons-material';
 
 const WatchHistory: React.FC = () => {
   const { setSelectedVideo } = useVideoContext();
@@ -33,6 +42,17 @@ const WatchHistory: React.FC = () => {
     fetchData();
   }, []); //
 
+  const deleteAllHistory = async (): Promise<void> => {
+    try {
+      const response = await UseFetch<any>('/api/history', {
+        method: 'DELETE', // DELETEリクエストを送信
+      });
+      setData(null);
+    } catch (error) {
+      console.error('履歴の削除中にエラーが発生しました', error);
+    }
+  };
+
   const handleVideoClick = (video: Video) => {
     // クリックした動画を selectedVideo にセット
     setSelectedVideo(video);
@@ -48,16 +68,29 @@ const WatchHistory: React.FC = () => {
   return (
     <TemplatePage>
       {data.length > 0 ? (
-        <WatchHistoryList
-          filteredVideos={data}
-          handleVideoClick={handleVideoClick}
-        />
+        <>
+          <Tooltip title="履歴を全て削除" arrow>
+            <Delete onClick={deleteAllHistory} />
+          </Tooltip>
+          <WatchHistoryList
+            filteredVideos={data}
+            handleVideoClick={handleVideoClick}
+          />
+        </>
       ) : (
-        <Typography>再生履歴がありません。</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <Typography>再生履歴がありません。</Typography>
+        </Box>
       )}
     </TemplatePage>
   );
-  
 };
 
 export default WatchHistory;
