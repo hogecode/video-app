@@ -16,7 +16,7 @@ import { useTheme } from 'context/ThemeContext';
 import { useIntersectionObserver } from 'usehooks-ts';
 
 interface VideoListProps {
-  filteredVideos: Video[];
+  filteredVideos: any[];
   handleVideoClick: (video: Video) => void;
 }
 
@@ -47,6 +47,8 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
     }
   };
 
+  console.log(filteredVideos);
+
   return (
     <>
       {filteredVideos.map((video) => (
@@ -68,6 +70,7 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
               height: '160px',
               cursor: 'pointer',
               borderRadius: '16px',
+              borderButtom: '10px',
               boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
               transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
@@ -90,10 +93,10 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
                 <ImageListItem>
                   <img
                     src={
-                      video.screenshotFilePath
+                      video.video.screenshotFilePath
                         ? SCREENSHOT_URL +
                           '/' +
-                          video.fileName.replace(/\.mp4$/, '.png')
+                          video.video.fileName.replace(/\.mp4$/, '.png')
                         : '/assets/fallback-image.svg'
                     }
                     alt="Screenshot"
@@ -108,7 +111,7 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
                   marginLeft: '15px',
                 }}
               >
-                <Typography variant="body1">{video.fileName}</Typography>
+                <Typography variant="body1">{video.video.fileName}</Typography>
                 <Box sx={{ maxWidth: 600 }}>
                   <Box sx={{ display: 'flex' }}>
                     <Typography
