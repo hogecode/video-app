@@ -221,7 +221,7 @@ const Video: React.FC = () => {
           <Box
             sx={{
               display: { xs: 'none', sm: 'block' }, // スマホでは非表示、sm以上でblock表示にできれば固い
-              overflowY: 'hidden', // コメントが多すぎる場合のスクロール
+              overflowY: 'auto', // コメントが多すぎる場合のスクロール
               height: videoHeight, // 動的に取得した高さを指定
             }}
           >
@@ -270,7 +270,7 @@ const Video: React.FC = () => {
         {selectedTab === 'Video Comments' &&
           comments &&
           comments.length > 0 && (
-            <Box sx={{ marginTop: 2, maxHeight: '250px', overflow: 'hidden' }}>
+            <Box sx={{ marginTop: 2, overflowY: 'auto', height:'200px', width:'130px'}}>
               <VideoComments
                 comments={comments || []}
                 videoTime={currentTime}

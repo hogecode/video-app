@@ -51,10 +51,22 @@ const VideoPlayer = forwardRef((props: VideoPlayerProps, ref) => {
     updateHeight();
   });
 
-  // あまり意味ない
   // Memo: コールバック内でuseTimeoutFnを使うとエラーになる
-  // useTimeoutFn(updateHeight, 200);
-  // useTimeoutFn(updateHeight, 600);
+  useEffect(() => {
+    const timeoutId200 = setTimeout(() => {
+      updateHeight();  // 200ms後に高さを更新
+    }, 200);
+
+    const timeoutId600 = setTimeout(() => {
+      updateHeight();  // 600ms後に高さを更新
+    }, 600);
+
+    // クリーンアップ関数でタイマーをクリア
+    return () => {
+      clearTimeout(timeoutId200);
+      clearTimeout(timeoutId600);
+    };
+  }, []);  
 
   // 初回マウント時に高さを設定
   useEffect(() => {

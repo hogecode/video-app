@@ -120,7 +120,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 fontSize: '0.7rem',
-                marginLeft: '10px'
+                marginLeft: '15px'
               }}
             >
               {comment.message}
@@ -153,10 +153,10 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
         <Typography variant="body2" sx={{ fontSize: '0.6rem', minWidth:'25px'}}>
           時間
         </Typography>
-        <Typography variant="body2" sx={{ fontSize: '0.6rem', minWidth:'45px', marginLeft: '-30px'}}>
+        <Typography variant="body2" sx={{ fontSize: '0.6rem', minWidth:'45px', marginLeft: '-70px'}}>
           コメント
         </Typography>
-        <Close onClick={toggleVisibility} sx={{ fontSize: '0.75rem', marginLeft: '-30px' }}/>
+        <Close onClick={toggleVisibility} sx={{ fontSize: '0.75rem', marginLeft: '-70px' }}/>
       </Box>
 
       <List
