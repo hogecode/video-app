@@ -15,18 +15,26 @@ import prisma from '../prisma';
  */
 export async function addWatchHistory(videoId: number): Promise<WatchHistory> {
   try {
-    const newWatchHistory = await prisma.watchHistory.create({
-      data: {
-        videoId,  // 観賞した動画のID
-        watchedAt: new Date(),  // 現在の日時を観賞日時に設定
+    const watchHistory = await prisma.watchHistory.upsert({
+      where: {
+        videoId,  // videoIdが既に存在するか確認
+      },
+      update: {
+        watchedAt: new Date(),  // 履歴が存在すればwatchedAtを更新
+      },
+      create: {
+        videoId,  
+        watchedAt: new Date(), 
       },
     });
-    return newWatchHistory;  // 追加された履歴を返す
+    return watchHistory;  // 追加または更新された履歴を返す
+
   } catch (error) {
-    console.error('Error adding WatchHistory:', error);
-    throw new Error('Failed to add WatchHistory');
+    console.error('Error adding or updating WatchHistory:', error);
+    throw new Error('Failed to add or update WatchHistory');
   }
 }
+
 
 
 /**

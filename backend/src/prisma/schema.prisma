@@ -45,7 +45,7 @@ model WatchHistory {
   watchedAt DateTime @default(now()) // 視聴日時
 
   // 視聴した動画（多対1）
-  videoId   Int
+  videoId   Int @unique
   video     Video @relation(fields: [videoId], references: [id], name: "VideoWatchHistory", onDelete: Cascade)
 }
 
