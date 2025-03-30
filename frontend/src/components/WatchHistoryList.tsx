@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   Card,
@@ -26,6 +26,8 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
   handleVideoClick,
 }) => {
 
+  const [historyVideos, setHistoryVideos] = useState<any>(filteredVideos);
+
   // ...分前、時間前など再生履歴を相対時間に変更する関数
   const getRelativeTime = (watchedAt: Date): string => {
     const now = new Date();
@@ -50,26 +52,40 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
   };
 
   // 履歴削除関数
-const deleteHistoryById = async (id: string): Promise<void> => {
-  try {
-    const response = await UseFetch(`/api/history/${id}`, {
-      method: 'DELETE', // DELETEリクエストを送信
-    });
+  const deleteHistoryById = async (id: string): Promise<void> => {
+    try {
+      const response = await UseFetch(`/api/history/${id}`, {
+        method: 'DELETE', // DELETEリクエストを送信
+      });
       // 削除後の更新処理（例えば、データを再取得するなど）
-  } catch (error) {
-    console.error(`動画 ID ${id} の削除中にエラーが発生しました`, error);
-  }
-};
+    } catch (error) {
+      console.error(`動画 ID ${id} の削除中にエラーが発生しました`, error);
+    }
+  };
 
   // 削除クリック時のイベントハンドラ
   const handleDeleteClick = (event: React.MouseEvent, id: string) => {
     event.stopPropagation(); // クリックイベントのバブリングを防止
-    deleteHistoryById(id);   // 履歴削除処理を実行
+    deleteHistoryById(id); // 履歴削除処理を実行
+
+    // 新しい配列を作成して状態を更新
+    setHistoryVideos((prevVideos) => {
+      const index = prevVideos.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        const updatedVideos = [...prevVideos];
+        updatedVideos.splice(index, 1); // 削除処理
+        console.log(`id ${id} の要素が削除されました`);
+        return updatedVideos; // 新しい配列で状態を更新
+      } else {
+        console.log(`id ${id} の要素は存在しません`);
+        return prevVideos; // 変更しない
+      }
+    });
   };
-  
+
   return (
     <>
-      {filteredVideos.map((video) => (
+      {historyVideos.map((video) => (
         <Grid
           container
           item
