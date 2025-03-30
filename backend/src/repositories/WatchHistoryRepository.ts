@@ -40,8 +40,11 @@ export async function getAllWatchHistory(): Promise<WatchHistory[]> {
       orderBy: {
         watchedAt: 'desc',  // watchedAtで降順に並べ替え
       },
+      include: {
+        video: true,  // Video情報も含める
+      },
     });
-    return watchHistory;  // 取得した履歴を返す
+    return watchHistory;  
   } catch (error) {
     console.error('Error fetching WatchHistory:', error);
     throw new Error('Failed to fetch WatchHistory');

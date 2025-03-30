@@ -18,6 +18,7 @@ import {
 import { createHlsForVideos, createHlsStreamFromFilePath } from '../services/VideoService';
 import { checkHlsModeEnabled } from '../services/ConfigService';
 import { getCommentJson } from '../services/FileReadService';
+import { cacheMiddleware } from '../middleware/cacheMiddleware';
 
 // Memo: prefixは/api/files
 const router = Router();
@@ -25,7 +26,7 @@ const router = Router();
 /** 動画一覧を取得するエンドポイント
  *  コメントファイルの情報(コメント日、コメント数など)を統合して返却
 */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', cacheMiddleware, async (req: Request, res: Response) => {
   try {
     const videos = await mergeVideosWithComments(); 
     res.json(videos); 
@@ -42,7 +43,7 @@ router.get('/', async (req: Request, res: Response) => {
  * Refactor: 肥大化してるし、重いので見直す
  * @returns ビデオ情報、HLSパス、コメントデータのJSONレスポンス
  */
-router.get('/:id', async (req: Request, res: Response): Promise<any> => {
+router.get('/:id', cacheMiddleware, async (req: Request, res: Response): Promise<any> => {
 
   // パラメータからIDを取得して数値に変換
   const fileId = parseInt(req.params.id as string, 10);

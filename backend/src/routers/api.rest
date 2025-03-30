@@ -1,24 +1,38 @@
 
+### /api/files
 ### GET /api/files(65ms)
 GET http://localhost:3002/api/files
 
 ### GET /api/files/:id(600ms)
 GET http://localhost:3002/api/files/1
 
-### GET /api/streams/:id(2500ms)
-GET http://localhost:3002/api/streams/1
 
+### 一覧画面を更新
 ### POST /api/files/refresh(25ms)
 POST http://localhost:3002/api/files/refresh
 
+
+### HLS生成
+### GET /api/streams/:id(2500ms)
+GET http://localhost:3002/api/streams/1
+
+
+### 静的ファイル関連
 ### GET screenshot(10ms)
 GET http://localhost:3002/assets/screenshots/sample03.png
 
 ### GET m3u8(3000→240ms)
 GET http://localhost:3002/assets/stream/sample01/sample01.m3u8
 
+
+### 設定関連
 ### GET /api/config
 GET http://localhost:3002/api/config
 
 ### GET /api/config/generate-cert
 GET http://localhost:3002/api/config/generate-cert
+
+
+### 再生履歴関連
+### GET /api/history
+GET http://localhost:3002/api/history

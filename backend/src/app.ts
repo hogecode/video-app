@@ -61,8 +61,9 @@ app.use(etagMiddleware);
 app.use(logMiddleware);
 
 // APIキャッシュミドルウェアの設定
+// 個々のエンドポイントで呼び出す
 // Fix: 変更の実装の見直し
-app.use(cacheMiddleware);
+// app.use(cacheMiddleware);
 
 
 // 初期化処理

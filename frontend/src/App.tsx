@@ -14,6 +14,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Video from './pages/Video';
 import { HlsModeProvider } from 'context/HlsModeContext';
+import WatchHistory from 'pages/WatchHistory';
 
 // Fix: font faceが読み込めないので一時的にコメントアウト
 // import './styles/index.scss';
@@ -76,6 +77,9 @@ const AppWithTheme: React.FC = () => {
 
           {/* 設定画面 */}
           <Route path="/settings" element={<Settings />} />
+
+          {/* 履歴画面 */}
+          <Route path="/history" element={<WatchHistory />} />
 
           {/* 404ページ */}
           <Route path="*" element={<NotFound />} />

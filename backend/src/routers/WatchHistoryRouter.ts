@@ -9,9 +9,25 @@ import { Request, Response, Router } from 'express';
 import {
   deleteAllWatchHistory,
   deleteWatchHistoryById,
+  getAllWatchHistory,
 } from '../repositories/WatchHistoryRepository';
 
 const router = Router();
+
+/**
+ * 全ての再生履歴を取得するエンドポイント
+ */
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const watchHistory = await getAllWatchHistory(); 
+
+    res.json(watchHistory); 
+  } catch (error) {
+    console.error('Error fetching watch history in router:', error);
+    res.status(500).json({ message: 'Failed to fetch watch history' }); 
+  }
+});
+
 
 /**
  * 全ての再生履歴を削除するエンドポイント
@@ -22,8 +38,8 @@ router.delete('/', async (req: Request, res: Response) => {
 
     res.json({ message: `ビデオが${videos}個削除されました` });
   } catch (error) {
-    console.error('Error fetching videos in router:', error);
-    res.status(500).json({ message: 'Failed to fetch videos' }); // エラーハンドリング
+    console.error('Error deleting videos in router:', error);
+    res.status(500).json({ message: 'Failed to delete videos' }); // エラーハンドリング
   }
 });
 
