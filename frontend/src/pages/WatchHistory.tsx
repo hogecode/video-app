@@ -8,6 +8,9 @@ import { SCROLL_SPEED } from '../constants';
 import TemplatePage from './TemplatePage';
 import UseFetch from 'hooks/UseFetch';
 import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import GridVideoList from 'components/GridVideoList';
+import CenteredVideoList from 'components/CenteredVideoList';
+import WatchHistoryList from 'components/WatchHistoryList';
 
 const WatchHistory: React.FC = () => {
   const { setSelectedVideo } = useVideoContext();
@@ -22,6 +25,13 @@ const WatchHistory: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       const result = await UseFetch<any>('/api/history');
+      // フラットなデータ構造に変換
+      const flatData = result.map((history: any) => ({
+        ...history.watchedAt,
+        ...history.video,
+      }));
+
+      setData(flatData);
       setData(result);
       setLoading(false);
     };
@@ -43,29 +53,17 @@ const WatchHistory: React.FC = () => {
 
   return (
     <TemplatePage>
-      <Grid container spacing={2}>
-        {data.length > 0 ? (
-          data.map((history) => (
-            <Grid item xs={12} key={history.id}>
-              <Card onClick={() => handleVideoClick(history?.video)}>
-                <CardContent>
-                  <Typography variant="h6">{history.video.fileName}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {new Date(history.watchedAt).toLocaleString()}
-                  </Typography>
-                  <Typography variant="body2">
-                    Views: {history.video.views}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))
-        ) : (
-          <Typography>再生履歴がありません。</Typography>
-        )}
-      </Grid>
+      {data.length > 0 ? (
+        <WatchHistoryList
+          filteredVideos={data}
+          handleVideoClick={handleVideoClick}
+        />
+      ) : (
+        <Typography>再生履歴がありません。</Typography>
+      )}
     </TemplatePage>
   );
+  
 };
 
 export default WatchHistory;

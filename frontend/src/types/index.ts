@@ -2,6 +2,7 @@
 // Videoの型定義
 export interface Video {
   id: number;
+  watchedAt?: Date; // 再生履歴用に追加
   fileName: string;
   folderPath: string;
   filePath: string;
