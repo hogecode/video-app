@@ -17,10 +17,6 @@ const logger = winston.createLogger({
     })
   ),
   transports: [
-    // コンソールにログを出力
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
     // エラーログをファイルに出力
     new winston.transports.File({
       filename: path.join(LOG_DIRECTORY, `error-${timestamp}.log`), // ファイル名に日付を追加

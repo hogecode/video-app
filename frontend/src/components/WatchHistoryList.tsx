@@ -24,10 +24,6 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
   filteredVideos,
   handleVideoClick,
 }) => {
-  // IntersectionObserverフックを使用
-  const { isIntersecting, ref } = useIntersectionObserver({
-    threshold: 0.5,
-  });
 
   const getRelativeTime = (watchedAt: Date): string => {
     const now = new Date();
@@ -93,16 +89,13 @@ const WatchHistoryList: React.FC<VideoListProps> = ({
               >
                 <ImageListItem>
                   <img
-                    ref={ref}
                     src={
-                      isIntersecting
-                        ? video.screenshotFilePath
-                          ? SCREENSHOT_URL +
-                            '/' +
-                            video.fileName.replace(/\.mp4$/, '.png')
-                          : '/assets/fallback-image.svg'
+                      video.screenshotFilePath
+                        ? SCREENSHOT_URL +
+                          '/' +
+                          video.fileName.replace(/\.mp4$/, '.png')
                         : '/assets/fallback-image.svg'
-                    } // IntersectionObserverでビューポートに入る前はフェイク画像を表示
+                    }
                     alt="Screenshot"
                     loading="lazy"
                     crossOrigin="anonymous"

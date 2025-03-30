@@ -25,11 +25,6 @@ const GridVideoList: React.FC<VideoListProps> = ({
   filteredVideos,
   handleVideoClick,
 }) => {
-  // IntersectionObserverフックを使用
-  const { isIntersecting, ref } = useIntersectionObserver({
-    threshold: 0.5,
-  });
-
   return (
     <>
       {filteredVideos.map((video) => (
@@ -54,16 +49,13 @@ const GridVideoList: React.FC<VideoListProps> = ({
               >
                 <ImageListItem>
                   <img
-                    ref={ref}
                     src={
-                      isIntersecting
-                        ? video.screenshotFilePath
-                          ? SCREENSHOT_URL +
-                            '/' +
-                            video.fileName.replace(/\.mp4$/, '.png')
-                          : '/assets/fallback-image.svg'
+                      video.screenshotFilePath
+                        ? SCREENSHOT_URL +
+                          '/' +
+                          video.fileName.replace(/\.mp4$/, '.png')
                         : '/assets/fallback-image.svg'
-                    } // IntersectionObserverでビューポートに入る前はフェイク画像を表示
+                    }
                     alt="Screenshot"
                     loading="lazy"
                     crossOrigin="anonymous"

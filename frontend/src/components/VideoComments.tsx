@@ -144,10 +144,10 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="body2" sx={{ fontSize: '0.65rem' }}>
+        <Typography variant="body2" sx={{ fontSize: '0.65rem', minWidth:'30px'}}>
           時間
         </Typography>
-        <Typography variant="body2" sx={{ fontSize: '0.65rem' }}>
+        <Typography variant="body2" sx={{ fontSize: '0.65rem', minWidth:'60px'}}>
           コメント
         </Typography>
         <Close onClick={toggleVisibility} sx={{ fontSize: '0.75rem' }}/>
