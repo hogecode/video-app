@@ -3,7 +3,13 @@
 import { useVideoContext } from 'context/VideoContext';
 import Hls from 'hls.js';
 import Plyr from 'plyr';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useDoubleTapSeek from './useDoubleTapSeek';
@@ -12,7 +18,7 @@ import { useDebounce, useTimeout, useTimeoutFn } from 'react-use';
 import { useEventListener } from 'usehooks-ts';
 
 interface VideoPlayerProps {
-  source: string; // sourceをプロップスとして受け取る
+  source: string; 
   onTimeUpdate: (time: number) => void;
 }
 
@@ -64,6 +70,7 @@ const VideoPlayer = forwardRef((props: VideoPlayerProps, ref) => {
     // loop: { active: true }, // ループ再生
   };
 
+
   // Hls.jsとPlyrのセットアップ
   // Memo: sourceを依存配列にする必要はあるのか
   useEffect(() => {
@@ -71,27 +78,28 @@ const VideoPlayer = forwardRef((props: VideoPlayerProps, ref) => {
 
     if (!videoRef.current) return;
 
-    // mp4モードの場合に早期リターン
+    // mp4モードの場合
     if (!hlsMode) {
       const player = new Plyr(videoRef.current, plyrOptions);
       return;
     }
 
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hlsRef.current = hls; // Hlsインスタンスをrefに保持
-      hls.loadSource(source);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-        // Plyrの初期化
-        const player = new Plyr(videoRef.current, plyrOptions);
-      });
-
-      hls.attachMedia(videoRef.current);
-    } else {
-      // Hls.jsがサポートされていない場合
+    // Hls.jsがサポートされていない場合
+    if (!Hls.isSupported()) {
       const player = new Plyr(videoRef.current, plyrOptions);
     }
+
+    // Hls.jsの場合にHlsインスタンスを生成
+    const hls = new Hls();
+    hlsRef.current = hls; // Hlsインスタンスをrefに保持
+    hls.loadSource(source);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+      // Plyrの初期化
+      const player = new Plyr(videoRef.current, plyrOptions);
+    });
+
+    hls.attachMedia(videoRef.current);
 
     // クリーンアップ
     return () => {
@@ -100,6 +108,7 @@ const VideoPlayer = forwardRef((props: VideoPlayerProps, ref) => {
       }
     };
   }, [source]);
+  
 
   // 再生時間が変わった時に親コンポーネントに通知する関数
   const handleTimeUpdate = () => {
