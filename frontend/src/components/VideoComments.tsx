@@ -140,7 +140,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
   }
 
   return (
-    <Box sx={{ maxHeight: '500px', minWidth: '125px', maxWidth: '125px'}}>
+    <Box sx={{ maxHeight: '500px', minWidth: '175px', maxWidth: '175px'}}>
       {/* ヘッダー */}
       <Box
         sx={{
@@ -161,7 +161,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
 
       <List
         ref={listRef}
-        width={125} // リストの幅
+        width={175} // リストの幅
         height={500} // リストの高さ
         rowCount={comments.length} // コメントの数
         rowHeight={25} // 各コメントの高さ

@@ -29,8 +29,6 @@ router.get('/:id', async (req: Request, res: Response): Promise<any> => {
   
   try {
     checkHlsModeEnabled() && await createHlsForVideoById(fileId);
-
-    // ビデオ情報、HLSパス、コメントJSONを返す
     return res.status(200).json({ message: 'HLS stream created' });
     
   } catch (error) {

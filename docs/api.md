@@ -4,8 +4,8 @@
 - できれば postman で API ドキュメントを生成
 
 **GET /api/files**
-・video と xml テーブルを統合して返却
-・id, fileName, views, liked, screenshotFilePath, commentCount, commentedDate
+
+- video と xml テーブルを統合して返却
 
 ```json
 [
@@ -24,9 +24,7 @@
 ]
 ```
 
-- [x] GET /api/files/:id
-      ・JSON 返却、再生回数、再生履歴追加
-      ・CommentJson.chats.no, vpos, date, message
+**GET /api/files/:id**
 
 ```json
 {
@@ -61,10 +59,10 @@
 }
 ```
 
-- [x] POST /api/files/refresh
-      ・フォルダ内の mp4, xml と DB の同期
-      ・mp4 と xml をマージして返却
-      ・id, fileName, views, liked, screenshotFilePath, commentCount, commentedDate
+**POST /api/files/refresh**
+
+- フォルダ内の mp4, xml と DB の同期
+- mp4 と xml をマージして返却
 
 ```json
 [
@@ -83,12 +81,12 @@
 ]
 ```
 
-- [x] GET /api/streams/:id
-      ・HLS 初期化
-      ・使わない
+**GET /api/streams/:id**
+
+- HLS モードで対応するm3u8ファイルが存在しない場合に生成するフォールバック
 
 ```json
 {
-  "hlsPath": "C:\\Users\\shun1\\Downloads\\新しいフォルダー\\video_app\\backend\\assets\\stream\\sample01\\sample01.m3u8"
+    "message": "HLS stream created";
 }
 ```

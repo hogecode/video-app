@@ -1,3 +1,5 @@
+# TODOリスト
+
 - [ ] アプリ初期化時
 
   - [x] exe で受け取った引数を config.ini に書く処理を追加
@@ -19,8 +21,7 @@
   - [x] GET /api/files/:id (HLS 初期化、JSON 返却、再生回数、再生履歴追加)
   - [x] POST /api/files/refresh (フォルダと DB を同期、動画ファイル返却)
 
-  - [ ] GET /api/history (再生履歴を動画、コメントテーブルとマージして返却)
+  - [x] GET /api/history (再生履歴を動画、コメントテーブルとマージして返却)
   - [x] DELETE /api/history (再生履歴を削除)
   - [x] DELETE /api/history/:id (再生履歴を削除)
 
-> 動画関連の処理らしい処理は書いた
