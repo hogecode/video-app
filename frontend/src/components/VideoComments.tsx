@@ -161,7 +161,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({
 
       <List
         ref={listRef}
-        width={175} // リストの幅
+        width={140} // リストの幅
         height={500} // リストの高さ
         rowCount={comments.length} // コメントの数
         rowHeight={25} // 各コメントの高さ

@@ -210,6 +210,7 @@ PC に保存してある動画を見る場合、多くの人が PC で VLC な�
 
 - 視聴履歴を新しい順に表示
 - 単一、あるいは全ての視聴履歴を削除
+<img style="width: 80%;" src="docs/images/history.png" alt="視聴履歴画面">
 
 ### FAQ
 
