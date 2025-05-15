@@ -87,6 +87,6 @@
 
 ```json
 {
-    "message": "HLS stream created";
+    "message": "HLS stream created"
 }
 ```
